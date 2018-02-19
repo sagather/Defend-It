@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <crypt.h>
 #include <time.h>
 #include <regex.h>
+#include <crypt.h>
 
 char name[50];
 char pass[10];
