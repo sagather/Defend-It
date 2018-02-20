@@ -27,10 +27,21 @@ public class DefendIt
 
         String password = getPassword();
 
-        while(!checkPass(password)){
+       // while(!checkPass(password)){
 
             password = getPassword();
 
+        //}
+
+        BigInteger passedInt1 = getInt(), passedInt2 = getInt();
+        while(!checkInt(passedInt1)){
+
+            passedInt1 = getInt();
+
+        }
+
+        while(!checkInt(passedInt2)){
+            passedInt2 = getInt();
         }
 
     }
@@ -119,7 +130,7 @@ public class DefendIt
 
     public static BigInteger getInt(){
 
-        System.out.println("Please enter an int between −2,147,483,648 and 2,147,483,647");
+        System.out.println("Please enter an integer between −2,147,483,648 and 2,147,483,647");
 
         BigInteger int1 = BigInteger.ZERO;
 
@@ -129,6 +140,7 @@ public class DefendIt
         }
         catch (NumberFormatException e){
             System.out.println("Check your int... were there any letters or symbols in it?");
+            return null;
         }
 
         return int1;
@@ -137,7 +149,7 @@ public class DefendIt
 
     public static boolean checkInt(BigInteger int1){
 
-        if(int1.compareTo(new BigInteger("-2147483648")) < 0 || int1.compareTo(new BigInteger("2147483648")) > 0){
+        if(int1 == null || int1.compareTo(new BigInteger("-2147483648")) < 0 || int1.compareTo(new BigInteger("2147483648")) > 0){
             System.out.println("Invalid range\n");
             return false;
         }
