@@ -51,14 +51,14 @@ int verify(char * pass)
   char *result;
   int ok;
 
-  result = crypt(pass, encrypt(pass));
+  result = crypt(pass, encryption(pass));
   ok = strcmp (result, pass) == 0;
 
   puts(ok ? "Access granted." : "Access denied.");
   return ok ? 0 : 1;
 }
 
-int encrypt(char * pass)
+int encryption(char * pass)
 {
   unsigned long seed[2];
   char salt[] = "$1$........";
