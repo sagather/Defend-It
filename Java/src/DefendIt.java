@@ -63,21 +63,23 @@ public class DefendIt
         return kb.nextLine();
     }
 
-    public static boolean checkName(String name)
+    public boolean checkName(String name)
     {
-        assert name != null || name != " " || name.length() > 50: "Invalid name, please try again \n" + getName();
+        assert name != null || name != " " || name.length() > 50  || name != "": "Invalid name, please try again \n" + getName();
 
         String s = "\uFE64" + name + "\uFE65";
         s = Normalizer.normalize(s, Form.NFKC);
         Pattern pattern = Pattern.compile("[<>]");
         Matcher matcher = pattern.matcher(s);
-        try{
-            matcher.find();
-        }
-        catch (IllegalFormatException e){
-            System.out.println("Not a valid format for name.");
-        }
-        return true;
+        if (matcher.find())
+            throw new IllegalStateException();
+        String exp = "^(?![0-9])[-\w\s]*$";
+        CharSequence input = name;
+        Pattern pattern1 = Pattern.compile(exp);
+        Matcher matcher1 = pattern1.matcher(input);
+        if(matcher.matches())
+            return true;
+        return false;
     }
 
     public static String getPassword()
