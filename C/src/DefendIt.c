@@ -114,15 +114,24 @@ long long verifyInt(const char *buff) {
     }
 }
 
+//File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
 FILE* openFileRead(const char* fileName){
 
-    return fopen(fileName, "r");
+    if( access( fileName, F_OK ) != -1 ) {
+        return fopen(fileName, 'r');
+    } else {
+        printf("File does not exist.");
+    }
 
 }
 
 FILE* openFileWrite(const char* fileName){
 
-    return fopen(fileName, "w");
+    if( access( fileName, F_OK ) != -1 ) {
+        printf("Cannot overwrite existing file.");
+    } else {
+        return fopen(fileName, "w");
+    }
 
 }
 
