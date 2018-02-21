@@ -58,15 +58,10 @@ public class DefendIt
             output = getOutput();
         }
 
-        String password = getPassword();
-        while(!checkPass(password))
-        {
-            password = getPassword();
-        }
-        String password2 = getPassword();
-        System.out.println("Password has been authenticated" + verifyPass(password2, generateSecurePass(password, getSalt(password.length())), getSalt(password.length())));
-        password = null;
-        password2 = null;
+
+        String pass = generateSecurePass(getPassword(), getSalt(10));
+        System.out.println("Password has been authenticated" + verifyPass(getPassword(), pass, getSalt(10)));
+
         //open output file call here
         File inputFile = openFile(input);
         BufferedReader reader = null;
@@ -129,6 +124,10 @@ public class DefendIt
     public static String getPassword()
     {
         System.out.print("Please enter a password that contains at least 10 characters and includes at least one upper case character, one lower case character, one digit, one punctuation mark: ");
+        while(!checkPass(kb.nextLine()))
+        {
+            getPassword();
+        }
         return kb.nextLine();
     }
 
