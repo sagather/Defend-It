@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <regex.h>
-#include <DefendIt.h>
+//#include <DefendIt.h>
 //#include <crypt.h>
 
 
@@ -89,9 +89,46 @@ int encryption(char * pass)
   return 0;
 }
 
+long long getInt(){
+
+    char* input[100];
+    printf("Enter an integer between -2147483648 and 2147483647\n");
+    fgets(input, 100, stdin);
+
+    return verifyInt(input);
+
+}
+
+//Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
+long long verifyInt(const char *buff) {
+    int matches;
+    long long pInt;
+
+    if (buff) {
+        matches = sscanf(buff, "%lld", &pInt);
+        if (matches != 1) {
+            printf("Not a valid integer type... did you have any letters or special symbols in there?");
+        }
+    } else {
+        printf("Not a valid integer type... did you have any letters or special symbols in there?");
+    }
+}
+
+FILE* openFileRead(const char* fileName){
+
+    return fopen(fileName, "r");
+
+}
+
+FILE* openFileWrite(const char* fileName){
+
+    return fopen(fileName, "w");
+
+}
+
 int main(int argc, const char argv[]){
 
-
+    getInt();
 
 
 
