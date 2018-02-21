@@ -61,12 +61,12 @@ public class DefendIt
         }
 
         String password = getPassword();
+        while(!checkPass(password))
+        {
+            password = getPassword();
+        }
         String newPass = generateSecurePass(password, getSalt(password.length()));
         verifyPass(password, newPass, getSalt(password.length()));
-        // while(!checkPass(password)){
-
-        //password = getPassword();
-        //}
 
         //open output file call here
     }
