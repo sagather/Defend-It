@@ -203,7 +203,7 @@ public class DefendIt
 
     public static boolean checkInt(BigInteger int1){
 
-        if(int1 == null || int1.compareTo(new BigInteger("-2147483648")) < 0 || int1.compareTo(new BigInteger("2147483648")) > 0){
+        if(int1 == null || int1.compareTo(new BigInteger("-2147483648")) < 0 || int1.compareTo(new BigInteger("2147483647")) > 0){
             System.out.println("Invalid range\n");
             return false;
         }

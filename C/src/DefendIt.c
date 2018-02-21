@@ -89,3 +89,10 @@ int encryption(char * pass)
   return 0;
 }
 
+int main(int argc, const char argv[]){
+
+
+
+
+
+}
