@@ -9,17 +9,18 @@
 //#include <crypt.h>
 
 
-char name[50];
-char pass[10];
+static char name[50];
+static char pass[10];
+static long long passedInt1, passedInt2;
 
-void readName(char * name)
+static void readName(char * name)
 {
    printf("Please enter your name: \n");
    fgets(name, 50, stdin);
    //strip(name);
 }
 
-int testName(char * name)
+static int testName(char * name)
 {
     if(strlen(name) > 50)
     {
@@ -28,14 +29,14 @@ int testName(char * name)
     return 0;
 }
 
-void readpass(char * pass)
+static void readpass(char * pass)
 {
    printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
    fgets(pass, 10, stdin);
    //strip(pass);
 }
 
-int testPass(char * pass)
+static int testPass(char * pass)
 {
     regex_t regex;
     int reti;
@@ -56,7 +57,7 @@ int testPass(char * pass)
     }
 }
 
-int verify(char * pass)
+static int verify(char * pass)
 {
   char *result;
   int ok;
@@ -68,7 +69,7 @@ int verify(char * pass)
   return ok ? 0 : 1;
 }
 
-int encryption(char * pass)
+static int encryption(char * pass)
 {
   unsigned long seed[2];
   char salt[] = "$1$........";
@@ -89,18 +90,18 @@ int encryption(char * pass)
   return 0;
 }
 
-long long getInt(){
+static long long getInt(){
 
     char* input[100];
     printf("Enter an integer between -2147483648 and 2147483647\n");
     fgets(input, 100, stdin);
 
-    return verifyInt(input);
+    return verifyIntType(input);
 
 }
 
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
-long long verifyInt(const char *buff) {
+static long long verifyIntType(const char *buff) {
     int matches;
     long long pInt;
 
@@ -114,8 +115,18 @@ long long verifyInt(const char *buff) {
     }
 }
 
+static int checkInt(long long input){
+
+    if(input < -2147483648 || input > 2147483648){
+        printf("Invalid range\n");
+        return 0;
+    }
+    return 1;
+
+}
+
 //File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
-FILE* openFileRead(const char* fileName){
+static FILE* openFileRead(const char* fileName){
 
     if( access( fileName, F_OK ) != -1 ) {
         return fopen(fileName, 'r');
@@ -125,7 +136,7 @@ FILE* openFileRead(const char* fileName){
 
 }
 
-FILE* openFileWrite(const char* fileName){
+static FILE* openFileWrite(const char* fileName){
 
     if( access( fileName, F_OK ) != -1 ) {
         printf("Cannot overwrite existing file.");
@@ -137,7 +148,19 @@ FILE* openFileWrite(const char* fileName){
 
 int main(int argc, const char argv[]){
 
-    getInt();
+    passedInt1 = getInt();
+
+    while(!checkInt(passedInt1)){
+        passedInt1 = getInt();
+    }
+
+    passedInt2 = getInt();
+
+    while(!checkInt(passedInt2)){
+        passedInt2 = getInt();
+    }
+
+
 
 
 
