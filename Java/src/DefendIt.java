@@ -225,12 +225,13 @@ public class DefendIt
         FileWriter fileWriter = null;
         BufferedWriter bufferedWriter = null;
 
-        try{
-            fileWriter = new FileWriter(outputFile);
-            bufferedWriter = new BufferedWriter(fileWriter);
-        }
-        catch (IOException e){
-            System.out.println("Could not write to file " + outputFile.getName());
+        if(!outputFile.exists()) {
+            try {
+                fileWriter = new FileWriter(outputFile);
+                bufferedWriter = new BufferedWriter(fileWriter);
+            } catch (IOException e) {
+                System.out.println("Could not write to file " + outputFile.getName());
+            }
         }
 
         return bufferedWriter;
