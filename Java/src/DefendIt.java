@@ -25,14 +25,6 @@ public class DefendIt
 
         }
 
-        String password = getPassword();
-
-       // while(!checkPass(password)){
-
-            password = getPassword();
-
-        //}
-
         BigInteger passedInt1 = getInt(), passedInt2 = getInt();
         while(!checkInt(passedInt1)){
 
@@ -44,6 +36,25 @@ public class DefendIt
             passedInt2 = getInt();
         }
 
+        String input = getInput();
+        while(!checkInput(input))
+        {
+            input = getInput();
+        }
+
+        String output = getOutput();
+        while(!checkOutput(output))
+        {
+            output = getOutput();
+        }
+
+        String password = getPassword();
+        // while(!checkPass(password)){
+
+        password = getPassword();
+        //}
+
+        //open output file call here
     }
 
     public static String getName()
@@ -164,10 +175,22 @@ public class DefendIt
         return kb.nextLine();
     }
 
+    public static boolean checkInput(String input)
+    {
+        String regex = "\\.txt$";
+        return input.matches(regex);
+    }
+
     public static String getOutput()
     {
         System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, and must be directed to the current directory): ");
         return kb.nextLine();
+    }
+
+    public static boolean checkOutput(String output)
+    {
+        String regex = "";
+        return output.matches(regex);
     }
 
 }
