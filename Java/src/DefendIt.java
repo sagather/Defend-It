@@ -81,7 +81,7 @@ public class DefendIt
             return false;
 
 
-        String exp = "^(?![0-9])[-\\w\\s]*$";
+        String exp = "^(?![0-9])[-\\w]*$";
         CharSequence input = name;
         Pattern pattern = Pattern.compile(exp);
         Matcher matcher = pattern.matcher(input);
