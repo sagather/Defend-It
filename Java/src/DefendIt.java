@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.*;
@@ -216,10 +213,27 @@ public class DefendIt
 
     }
 
-    public static File openInputFile(String filename){
+    public static File openFile(String filename){
 
         File inputFile = new File(filename);
         return inputFile;
+
+    }
+
+    public static BufferedWriter writeToFile(File outputFile){
+
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
+
+        try{
+            fileWriter = new FileWriter(outputFile);
+            bufferedWriter = new BufferedWriter(fileWriter);
+        }
+        catch (IOException e){
+            System.out.println("Could not write to file " + outputFile.getName());
+        }
+
+        return bufferedWriter;
 
     }
 
