@@ -6,6 +6,8 @@
 #include <regex.h>
 #include <stdbool.h>
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <errno.h>
 //#include <DefendIt.h>
 //#include <crypt.h>
 
@@ -97,18 +99,35 @@ static int encryption(char * pass)
 }
 
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
+//and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
 static long long verifyIntType(const char *buff) {
-    int matches;
     long long pInt;
+    char* ptr;
 
     if (buff) {
-        matches = sscanf(buff, "%lld", &pInt);
-        if (matches != 1) {
-            printf("Not a valid integer type... did you have any letters or special symbols in there?");
+        pInt = strtoll(buff, ptr, 10);
+        if (pInt == 0)
+        {
+            /* If a conversion error occurred, display a message and exit */
+            if (errno == EINVAL) {
+                printf("Invalid integer type, were there some weird characters or something?\n");
+            }
         }
     } else {
         printf("Not a valid integer type... did you have any letters or special symbols in there?");
     }
+
+    return pInt;
+}
+
+static long long getInt(){
+
+    char* input[100];
+    printf("Enter an integer between -2147483648 and 2147483647\n");
+    fgets((char *) input, 100, stdin);
+
+    return verifyIntType((const char *) input);
+
 }
 
 static long long getInt(){
@@ -135,7 +154,7 @@ static int checkInt(long long input){
 static FILE* openFileRead(const char* fileName){
 
     if( access( fileName, F_OK ) != -1 ) {
-        return fopen(fileName, 'r');
+        return fopen(fileName, (const char *) 'r');
     } else {
         printf("File does not exist.");
     }
