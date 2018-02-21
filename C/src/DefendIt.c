@@ -147,6 +147,7 @@ static FILE* openFileRead(const char* fileName){
     } else {
         printf("File does not exist.");
     }
+    return NULL;
 
 }
 
@@ -157,6 +158,7 @@ static FILE* openFileWrite(const char* fileName){
     } else {
         return fopen(fileName, "w");
     }
+    return NULL;
 
 }
 
