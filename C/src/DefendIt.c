@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <regex.h>
+#include <DefendIt.h>
 //#include <crypt.h>
 
 
@@ -16,6 +17,15 @@ void readName(char * name)
    printf("Please enter your name: \n");
    fgets(name, 50, stdin);
    //strip(name);
+}
+
+int testName(char * name)
+{
+    if(strlen(name) > 50)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 void readpass(char * pass)
@@ -62,7 +72,7 @@ int encryption(char * pass)
 {
   unsigned long seed[2];
   char salt[] = "$1$........";
-  const char const alpha = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const char alpha[65] = {"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"};
   int i;
 
   // Generate a (not very) random seed? Rand() was not suggested?
@@ -78,3 +88,4 @@ int encryption(char * pass)
   puts(pass);
   return 0;
 }
+
