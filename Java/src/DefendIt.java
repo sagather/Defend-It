@@ -77,7 +77,9 @@ public class DefendIt
 
     public static boolean checkName(String name)
     {
-        assert name != null || name != " " || name.length() > 50  || name != "" || name != "\n" : "Invalid name, please try again \n" + getName();
+        if(name.isEmpty() || name.length() > 50)
+            return false;
+
 
         String exp = "^(?![0-9])[-\\w\\s]*$";
         CharSequence input = name;
