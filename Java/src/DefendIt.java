@@ -19,10 +19,19 @@ public class DefendIt
 
     public static void main(String[] args){
 
-        String name = getName();
-        while(!checkName(name)){
 
-            name = getName();
+        System.out.print("Please enter a first name (less than 50 characters long): ");
+        String Fname = kb.nextLine();
+        while(!checkName(Fname)){
+
+            Fname = getName();
+
+        }
+        System.out.print("Please enter a last name (less than 50 characters long): ");
+        String Lname = kb.nextLine();
+        while(!checkName(Lname)){
+
+            Lname = getName();
 
         }
 
@@ -52,6 +61,7 @@ public class DefendIt
         }
 
         String password = getPassword();
+        getSalt(password.length())
         // while(!checkPass(password)){
 
         password = getPassword();
