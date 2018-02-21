@@ -19,10 +19,19 @@ public class DefendIt
 
     public static void main(String[] args){
 
-        String name = getName();
-        while(!checkName(name)){
 
-            name = getName();
+        System.out.print("Please enter a first name (less than 50 characters long): ");
+        String Fname = kb.nextLine();
+        while(!checkName(Fname)){
+
+            Fname = getName();
+
+        }
+        System.out.print("Please enter a last name (less than 50 characters long): ");
+        String Lname = kb.nextLine();
+        while(!checkName(Lname)){
+
+            Lname = getName();
 
         }
 
@@ -40,22 +49,59 @@ public class DefendIt
         String input = getInput();
         while(!checkInput(input))
         {
+            System.out.println("Input file name is invalid. Please try again.");
             input = getInput();
         }
 
         String output = getOutput();
         while(!checkOutput(output))
         {
+            System.out.println("Output file name is invalid. Please try again.");
             output = getOutput();
         }
 
         String password = getPassword();
+        getSalt(password.length());
         // while(!checkPass(password)){
 
         password = getPassword();
         //}
 
+        File inputFile = openFile(input);
+        BufferedReader reader = null;
+        if(inputFile.exists()){
+            reader = readFromFile(inputFile);
+        }
+
         //open output file call here
+        File outputFile = openFile(output);
+        if(outputFile.exists()){
+            output = getOutput();
+            outputFile = openFile(output);
+        }
+
+        BufferedWriter writer = writeToFile(outputFile);
+        if(writer == null){
+            System.out.println("Should never reach this statement");
+        }
+        else{
+            try {
+                writer.write(Fname + " " + Lname);
+                writer.write(""+passedInt1.add(passedInt2) + "\n");
+                writer.write(""+passedInt1.multiply(passedInt2) + "\n");
+                while(reader.ready()){
+                    writer.write("" + reader.readLine());
+                }
+
+                writer.close();
+
+            }
+            catch (IOException e){
+                System.out.println("Should never reach this statement either.");
+            }
+
+        }
+
     }
 
     public static String getName()
@@ -66,19 +112,15 @@ public class DefendIt
 
     public static boolean checkName(String name)
     {
-        assert name != null || name != " " || name.length() > 50: "Invalid name, please try again \n" + getName();
+        assert name != null || name != " " || name.length() > 50  || name != "": "Invalid name, please try again \n" + getName();
 
-        String s = "\uFE64" + name + "\uFE65";
-        s = Normalizer.normalize(s, Form.NFKC);
-        Pattern pattern = Pattern.compile("[<>]");
-        Matcher matcher = pattern.matcher(s);
-        try{
-            matcher.find();
-        }
-        catch (IllegalFormatException e){
-            System.out.println("Not a valid format for name.");
-        }
-        return true;
+        String exp = "^(?![0-9])[-\\w\\s]*$";
+        CharSequence input = name;
+        Pattern pattern = Pattern.compile(exp);
+        Matcher matcher = pattern.matcher(input);
+        if(matcher.matches())
+            return true;
+        return false;
     }
 
     public static String getPassword()
@@ -172,25 +214,25 @@ public class DefendIt
 
     public static String getInput()
     {
-        System.out.print("Please enter the name of an Input File (Must be .txt, must already exist, and must be in the current directory): ");
+        System.out.print("Please enter the name of an Input File (Must be .txt, must already exist, the only special characters allowed are underscores and dashes, and must be in the current directory): ");
         return kb.nextLine();
     }
 
     public static boolean checkInput(String input)
     {
-        String regex = "\\.txt$";
+        String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return input.matches(regex);
     }
 
     public static String getOutput()
     {
-        System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, and must be directed to the current directory): ");
+        System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, the only special characters allowed are underscores and dashes, and must be directed to the current directory): ");
         return kb.nextLine();
     }
 
     public static boolean checkOutput(String output)
     {
-        String regex = "";
+        String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return output.matches(regex);
     }
 
@@ -221,7 +263,7 @@ public class DefendIt
     }
 
     public static BufferedWriter writeToFile(File outputFile){
-//
+
         FileWriter fileWriter = null;
         BufferedWriter bufferedWriter = null;
 
