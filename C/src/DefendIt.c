@@ -101,11 +101,11 @@ static int encryption(char * pass)
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
 //and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
 static long long verifyIntType(const char *buff) {
-    long long pInt;
-    char* ptr;
+    long long pInt = NULL;
+    char *ptr = NULL;
 
     if (buff) {
-        pInt = strtoll(buff, ptr, 10);
+        pInt = strtoll(buff, (char **) ptr, 10);
         if (pInt == 0)
         {
             /* If a conversion error occurred, display a message and exit */
@@ -127,17 +127,6 @@ static long long getInt(){
     fgets((char *) input, 100, stdin);
 
     return verifyIntType((const char *) input);
-
-}
-
-static long long getInt(){
-
-    char* input[100];
-    printf("Enter an integer between -2147483648 and 2147483647\n");
-    fgets(input, 100, stdin);
-
-    return verifyIntType(input);
-
 }
 
 static int checkInt(long long input){
