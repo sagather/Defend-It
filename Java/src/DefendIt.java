@@ -221,7 +221,7 @@ public class DefendIt
     }
 
     public static BufferedWriter writeToFile(File outputFile){
-
+//
         FileWriter fileWriter = null;
         BufferedWriter bufferedWriter = null;
 
