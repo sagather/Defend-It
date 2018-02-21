@@ -30,9 +30,7 @@ public class DefendIt
         System.out.print("Please enter a last name (less than 50 characters long): ");
         String Lname = kb.nextLine();
         while(!checkName(Lname)){
-
             Lname = getName();
-
         }
 
         BigInteger passedInt1 = getInt(), passedInt2 = getInt();
@@ -187,6 +185,18 @@ public class DefendIt
 
     public static boolean checkInput(String input)
     {
+        File tmp = new File(input);
+        boolean exists = tmp.exists();
+        if(!exists)
+        {
+            System.out.println("File does not exist");
+            return false;
+        }
+        if(tmp.isDirectory())
+        {
+            System.out.println("File is a directory");
+            return false;
+        }
         String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return input.matches(regex);
     }
@@ -199,6 +209,17 @@ public class DefendIt
 
     public static boolean checkOutput(String output)
     {
+        File tmp = new File(output);
+        if(tmp.exists())
+        {
+            System.out.println("File does exist");
+            return false;
+        }
+        if(tmp.isDirectory())
+        {
+            System.out.println("File is a directory");
+            return false;
+        }
         String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return output.matches(regex);
     }
@@ -217,9 +238,7 @@ public class DefendIt
                 System.out.println("Not a valid file");
             }
         }
-
         return bufferedReader;
-
     }
 
     public static File openFile(String filename){
@@ -246,6 +265,4 @@ public class DefendIt
         return bufferedWriter;
 
     }
-
 }
-
