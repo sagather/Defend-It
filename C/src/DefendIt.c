@@ -288,4 +288,22 @@ int main(int argc, const char argv[]){
         readOutput(output);
         outputcheck = checkOutput(output);
     }
+
+    FILE* inputFile = openFileRead(input);
+
+    FILE* outputFile = openFileWrite(output);
+
+    fputs(name, outputFile);
+    fputs(pass, outputFile);
+    fputs((const char *) (passedInt1 + passedInt2), outputFile);
+    fputs((const char *) (passedInt1 * passedInt2), outputFile);
+
+    int c;
+    while((c = getc(inputFile)) != EOF){
+        fputc(c, outputFile);
+    }
+
+    fclose(outputFile);
+    fclose(inputFile);
+
 }
