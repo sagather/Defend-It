@@ -73,7 +73,7 @@ public class DefendIt
         Matcher matcher = pattern.matcher(s);
         if (matcher.find())
             throw new IllegalStateException();
-        String exp = "^(?![0-9])[-\w\s]*$";
+        String exp = "^(?![0-9])[-\\w\\s]*$";
         CharSequence input = name;
         Pattern pattern1 = Pattern.compile(exp);
         Matcher matcher1 = pattern1.matcher(input);
