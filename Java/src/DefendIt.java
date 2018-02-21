@@ -63,8 +63,8 @@ public class DefendIt
         {
             password = getPassword();
         }
-        String newPass = generateSecurePass(password, getSalt(password.length()));
-        verifyPass(password, newPass, getSalt(password.length()));
+        String password2 = getPassword();
+        System.out.println("Password has been authenticated" + verifyPass(password2, generateSecurePass(password, getSalt(password.length())), getSalt(password.length())));
 
         //open output file call here
         File inputFile = openFile(input);
@@ -115,7 +115,7 @@ public class DefendIt
             return false;
 
 
-        String exp = "^(?![0-9])[-\\w\\s]*$";
+        String exp = "^(?![0-9])[-\\w]*$";
         CharSequence input = name;
         Pattern pattern = Pattern.compile(exp);
         Matcher matcher = pattern.matcher(input);
