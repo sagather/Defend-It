@@ -1,3 +1,4 @@
+import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.*;
@@ -63,23 +64,21 @@ public class DefendIt
         return kb.nextLine();
     }
 
-    public boolean checkName(String name)
+    public static boolean checkName(String name)
     {
-        assert name != null || name != " " || name.length() > 50  || name != "": "Invalid name, please try again \n" + getName();
+        assert name != null || name != " " || name.length() > 50: "Invalid name, please try again \n" + getName();
 
         String s = "\uFE64" + name + "\uFE65";
         s = Normalizer.normalize(s, Form.NFKC);
         Pattern pattern = Pattern.compile("[<>]");
         Matcher matcher = pattern.matcher(s);
-        if (matcher.find())
-            throw new IllegalStateException();
-        String exp = "^(?![0-9])[-\\w\\s]*$";
-        CharSequence input = name;
-        Pattern pattern1 = Pattern.compile(exp);
-        Matcher matcher1 = pattern1.matcher(input);
-        if(matcher.matches())
-            return true;
-        return false;
+        try{
+            matcher.find();
+        }
+        catch (IllegalFormatException e){
+            System.out.println("Not a valid format for name.");
+        }
+        return true;
     }
 
     public static String getPassword()
@@ -193,6 +192,50 @@ public class DefendIt
     {
         String regex = "";
         return output.matches(regex);
+    }
+
+    public static BufferedReader readFromFile(File inputFile){
+
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
+
+        if(inputFile.exists() && inputFile.isFile()){
+            try {
+                fileReader = new FileReader(inputFile);
+                bufferedReader = new BufferedReader(fileReader);
+            }
+            catch(FileNotFoundException e){
+                System.out.println("Not a valid file");
+            }
+        }
+
+        return bufferedReader;
+
+    }
+
+    public static File openFile(String filename){
+
+        File inputFile = new File(filename);
+        return inputFile;
+
+    }
+
+    public static BufferedWriter writeToFile(File outputFile){
+//
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
+
+        if(!outputFile.exists()) {
+            try {
+                fileWriter = new FileWriter(outputFile);
+                bufferedWriter = new BufferedWriter(fileWriter);
+            } catch (IOException e) {
+                System.out.println("Could not write to file " + outputFile.getName());
+            }
+        }
+
+        return bufferedWriter;
+
     }
 
 }
