@@ -1,3 +1,4 @@
+import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.*;
@@ -191,6 +192,50 @@ public class DefendIt
     {
         String regex = "";
         return output.matches(regex);
+    }
+
+    public static BufferedReader readFromFile(File inputFile){
+
+        FileReader fileReader = null;
+        BufferedReader bufferedReader = null;
+
+        if(inputFile.exists() && inputFile.isFile()){
+            try {
+                fileReader = new FileReader(inputFile);
+                bufferedReader = new BufferedReader(fileReader);
+            }
+            catch(FileNotFoundException e){
+                System.out.println("Not a valid file");
+            }
+        }
+
+        return bufferedReader;
+
+    }
+
+    public static File openFile(String filename){
+
+        File inputFile = new File(filename);
+        return inputFile;
+
+    }
+
+    public static BufferedWriter writeToFile(File outputFile){
+//
+        FileWriter fileWriter = null;
+        BufferedWriter bufferedWriter = null;
+
+        if(!outputFile.exists()) {
+            try {
+                fileWriter = new FileWriter(outputFile);
+                bufferedWriter = new BufferedWriter(fileWriter);
+            } catch (IOException e) {
+                System.out.println("Could not write to file " + outputFile.getName());
+            }
+        }
+
+        return bufferedWriter;
+
     }
 
 }
