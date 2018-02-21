@@ -40,12 +40,14 @@ public class DefendIt
         String input = getInput();
         while(!checkInput(input))
         {
+            System.out.println("Input file name is invalid. Please try again.");
             input = getInput();
         }
 
         String output = getOutput();
         while(!checkOutput(output))
         {
+            System.out.println("Output file name is invalid. Please try again.");
             output = getOutput();
         }
 
@@ -168,25 +170,25 @@ public class DefendIt
 
     public static String getInput()
     {
-        System.out.print("Please enter the name of an Input File (Must be .txt, must already exist, and must be in the current directory): ");
+        System.out.print("Please enter the name of an Input File (Must be .txt, must already exist, the only special characters allowed are underscores and dashes, and must be in the current directory): ");
         return kb.nextLine();
     }
 
     public static boolean checkInput(String input)
     {
-        String regex = "\\.txt$";
+        String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return input.matches(regex);
     }
 
     public static String getOutput()
     {
-        System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, and must be directed to the current directory): ");
+        System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, the only special characters allowed are underscores and dashes, and must be directed to the current directory): ");
         return kb.nextLine();
     }
 
     public static boolean checkOutput(String output)
     {
-        String regex = "";
+        String regex = "^[a-zA-Z0-9-_ ]*[.]txt$";
         return output.matches(regex);
     }
 
