@@ -68,12 +68,6 @@ public class DefendIt
     {
         assert name != null || name != " " || name.length() > 50  || name != "": "Invalid name, please try again \n" + getName();
 
-        String s = "\uFE64" + name + "\uFE65";
-        s = Normalizer.normalize(s, Form.NFKC);
-        Pattern pattern = Pattern.compile("[<>]");
-        Matcher matcher = pattern.matcher(s);
-        if (matcher.find())
-            throw new IllegalStateException();
         String exp = "^(?![0-9])[-\\w\\s]*$";
         CharSequence input = name;
         Pattern pattern1 = Pattern.compile(exp);
