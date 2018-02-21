@@ -101,7 +101,7 @@ static int encryption(char * pass)
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
 //and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
 static long long verifyIntType(const char *buff) {
-    long long pInt = NULL;
+    long long pInt = (long long)NULL;
     char *ptr = NULL;
 
     if (buff) {
