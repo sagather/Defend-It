@@ -86,11 +86,11 @@ public class DefendIt
         }
         else{
             try {
-                writer.write(Fname + " " + Lname);
+                writer.write(Fname + " " + Lname + "\n");
                 writer.write(""+passedInt1.add(passedInt2) + "\n");
                 writer.write(""+passedInt1.multiply(passedInt2) + "\n");
                 while(reader.ready()){
-                    writer.write("" + reader.readLine());
+                    writer.write("" + reader.readLine() + "\n");
                 }
 
                 writer.close();
@@ -101,6 +101,7 @@ public class DefendIt
             }
 
         }
+        System.exit(1);
     }
 
     public static String getName()
