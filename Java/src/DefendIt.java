@@ -65,7 +65,8 @@ public class DefendIt
         }
         String password2 = getPassword();
         System.out.println("Password has been authenticated" + verifyPass(password2, generateSecurePass(password, getSalt(password.length())), getSalt(password.length())));
-
+        password = null;
+        password2 = null;
         //open output file call here
     }
 
