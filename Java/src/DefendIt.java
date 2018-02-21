@@ -101,7 +101,7 @@ public class DefendIt
             }
 
         }
-        System.exit(0);
+        System.exit(1);
     }
 
     public static String getName()
