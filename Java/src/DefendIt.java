@@ -67,6 +67,40 @@ public class DefendIt
         verifyPass(password, newPass, getSalt(password.length()));
 
         //open output file call here
+        File inputFile = openFile(input);
+        BufferedReader reader = null;
+        if(inputFile.exists()){
+            reader = readFromFile(inputFile);
+        }
+
+        //open output file call here
+        File outputFile = openFile(output);
+        if(outputFile.exists()){
+            output = getOutput();
+            outputFile = openFile(output);
+        }
+
+        BufferedWriter writer = writeToFile(outputFile);
+        if(writer == null){
+            System.out.println("Should never reach this statement");
+        }
+        else{
+            try {
+                writer.write(Fname + " " + Lname);
+                writer.write(""+passedInt1.add(passedInt2) + "\n");
+                writer.write(""+passedInt1.multiply(passedInt2) + "\n");
+                while(reader.ready()){
+                    writer.write("" + reader.readLine());
+                }
+
+                writer.close();
+
+            }
+            catch (IOException e){
+                System.out.println("Should never reach this statement either.");
+            }
+
+        }
     }
 
     public static String getName()
