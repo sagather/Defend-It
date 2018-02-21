@@ -158,5 +158,17 @@ public class DefendIt
 
     }
 
+    public static String getInput()
+    {
+        System.out.print("Please enter the name of an Input File (Must be .txt, must already exist, and must be in the current directory): ");
+        return kb.nextLine();
+    }
+
+    public static String getOutput()
+    {
+        System.out.print("Please enter the name of an Output File (Must be .txt, must not already exist, and must be directed to the current directory): ");
+        return kb.nextLine();
+    }
+
 }
 
