@@ -70,7 +70,7 @@ static int verify(char * pass)
   char *result;
   int ok;
 
-  result = crypt(pass, encryption(pass));
+//  result = crypt(pass, encryption(pass));
   ok = strcmp (result, pass) == 0;
 
   puts(ok ? "Access granted." : "Access denied.");
@@ -93,7 +93,7 @@ static int encryption(char * pass)
     salt[3+i] = alpha[(seed[i/5] >> (i%5)*6) &0x3f];
 
 
-  pass = crypt(pass, salt);
+//  pass = crypt(pass, salt);
   puts(pass);
   return 0;
 }
@@ -101,11 +101,11 @@ static int encryption(char * pass)
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
 //and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
 static long long verifyIntType(const char *buff) {
-    long long pInt = 0;
+    long long pInt = (long long) 2000000000000000000000000000000000;
     char *ptr = NULL;
 
     if (buff) {
-        pInt = strtoll(buff, (char **) ptr, 10);
+        pInt = strtoll(buff, &ptr, 10);
         if (pInt == 0)
         {
             /* If a conversion error occurred, display a message and exit */
@@ -126,16 +126,21 @@ static long long getInt(){
     printf("Enter an integer between -2147483648 and 2147483647\n");
     fgets((char *) input, 100, stdin);
 
+    while(strcmp(input, '\n') == 0){
+        printf("Please input valid data\n");
+        fgets((char *) input, 100, stdin);
+    }
+
     return verifyIntType((const char *) input);
 }
 
-static int checkInt(long long input){
+static bool checkInt(long long input){
 
-    if(input < -2147483648 || input > 2147483648){
-        printf("Invalid range\n");
-        return 0;
+    if(input >= -2147483648 && input <= 2147483647){
+        printf("%lld",input);
+        return true;
     }
-    return 1;
+    return false;
 
 }
 
