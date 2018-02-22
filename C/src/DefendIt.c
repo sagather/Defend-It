@@ -14,7 +14,7 @@
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
-
+char n[50];
 char pass[11];
 
 char input[50];
@@ -48,7 +48,6 @@ bool checkName(char * name)
 
 char * readName()
 {
-    char n[50];
     int len = 0;
     fgets(n, 50, stdin);
     len = (int) strlen(n);
@@ -88,7 +87,7 @@ bool checkPass(char * input)
 char * readpass()
 {
     int len = 0;
-    printf("Please enter a password of length 10 that includes only upper case and lower case characters, and digits: \n");
+    printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets(pass,11,stdin);
 
     len = (int) strlen(pass);
@@ -369,7 +368,6 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 */
-    printf("After outputcheck\n");
     char * p = readpass();
     unsigned long  newP = generatePass(p, salt(p));
     char * p2 = readpass();
