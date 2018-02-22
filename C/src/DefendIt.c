@@ -161,6 +161,7 @@ static long long getInt(){
 
 static bool checkInt(long long input){
 
+    printf(input + "\n");
     if(input >= -2147483648 && input <= 2147483647){
         return true;
     }
