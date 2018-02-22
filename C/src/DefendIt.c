@@ -8,93 +8,158 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <errno.h>
+#define BASE (256)
+#include <fcntl.h>
+
 //#include <DefendIt.h>
-//#include <crypt.h>
+#include <crypt.h>
 
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c
 
-static char name[50];
-static char pass[10];
+char n[50];
+char pass[11];
+
 char input[50];
 char output[50];
 
 static long long passedInt1, passedInt2;
 
-static void readName(char * name)
+char * readName()
 {
-   printf("Please enter your name: \n");
-   fgets(name, 50, stdin);
-   //strip(name);
-}
-
-static int testName(char * name)
-{
-    if(strlen(name) > 50)
+    int len = 0;
+    fgets(n, 50, stdin);
+    len = strlen(n);
+    if(n[len-1] == '\n' )
+        n[len-1] = 0;
+    while(!checkName(n))
     {
-        return 1;
+        readName();
     }
-    return 0;
+    return n;
+
 }
 
-static void readpass(char * pass)
-{
-   printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
-   fgets(pass, 10, stdin);
-   //strip(pass);
-}
-
-static int testPass(char * pass)
+bool checkName(char * name)
 {
     regex_t regex;
-    int reti;
-    reti = regcomp(&regex, "^((?=.\\d)(?=.[a-z])(?=.[A-Z])(?=.[!@#$%]).{10})$", 0);
-    if(reti)
+    regmatch_t pmatch[2];
+    int ret;
+    if(regcomp(&regex, "^[a-zA-Z]*$", REG_EXTENDED|REG_NOSUB) != 0)
     {
+        printf("\nregcomp() failed, returning nonzero\n");
+        return false;
     }
-    reti = regexec(&regex, pass, 1, (regmatch_t *) 1, 0);
-    if(!reti)
+    ret = regexec(&regex, name, 1, pmatch, 0);
+    if(ret == 0) //match found
     {
-        return 0;
+        return true;
     }
     else
     {
-        printf("password does not meet requirement");
-        return 1;
+        printf("\nName does not meet requirements\n");
+        return false;
     }
+
 }
 
-static int verify(char * pass)
+char * readpass()
 {
-  char *result = NULL;
-  int ok;
+    int len = 0;
+    printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
+    fgets(pass,11,stdin);
 
-//  result = crypt(pass, encryption(pass));
-  ok = strcmp (result, pass) == 0;
-
-  puts(ok ? "Access granted." : "Access denied.");
-  return ok ? 0 : 1;
+    len = strlen(pass);
+    if(pass[len-1] == '\n' )
+        pass[len-1] = 0;
+    while(!checkPass(pass))
+    {
+        readpass();
+    }
+    return pass;
 }
 
-static int encryption(char * pass)
+bool checkPass(char * input)
 {
-  unsigned long seed[2];
-  char salt[] = "$1$........";
-  const char alpha[65] = {"./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"};
-  int i;
+    regex_t regex;
+    regmatch_t pmatch[2];
+    int ret;
+    if(regcomp(&regex, "^([a-zA-Z0-9]+){10}$", REG_EXTENDED|REG_NOSUB) != 0)
+    {
+        printf("\nregcomp() failed, returning nonzero\n");
+        return false;
+    }
+    ret = regexec(&regex, input, 1, pmatch, 0);
+    if(ret == 0) //match found
+    {
+        return true;
+    }
+    else
+    {
+        printf("\nPassword does not meet requirements\n");
+        return false;
+    }
 
-  // Generate a (not very) random seed? Rand() was not suggested?
-  //Tom has CryptGenRandom on Penguin?
-  seed[0] = (unsigned long) time(NULL);
-  seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
+}
+unsigned long generatePass(char * pass, unsigned long s)
+{
 
-  for (i = 0; i < 10; i++)
-    salt[3+i] = alpha[(seed[i/5] >> (i%5)*6) &0x3f];
+    char * newPass = {crypt(pass, (char*)s)};
+    unsigned long newP = Hasher(newPass, 10);
+    return newP;
+}
+
+unsigned long salt(char * pass)
+{
+    ssize_t result = 0;
+    int randomData = open("/dev/urandom", O_RDONLY);
+    if (randomData < 0)
+    {
+        printf("something went wrong");
+    }
+    else
+    {
+
+        result = read(randomData, pass, sizeof pass);
+        if (result < 0)
+        {
+            printf("something went wrong");
+        }
+    }
+
+    return (unsigned long)result;
+}
+
+unsigned long Hasher(const char *s, unsigned long m)
+{
+    unsigned long h;
+    unsigned const char *us;
+
+    /* cast s to unsigned const char * */
+    /* this ensures that elements of s will be treated as having values >= 0 */
+    us = (unsigned const char *) s;
+
+    h = 0;
+    while(*us != '\0') {
+        h = (h * BASE + *us) % m;
+        us++;
+    }
+
+    return h;
+}
 
 
-//  pass = crypt(pass, salt);
-  puts(pass);
-  return 0;
+void verifyPass(char * providedPass, unsigned long securePass, unsigned long s)
+{
+    unsigned long newPass = {generatePass(providedPass, s)};
+    if(newPass == securePass)
+    {
+        printf("true");
+    }
+    else
+    {
+        printf("false");
+    }
 }
 
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
@@ -165,7 +230,6 @@ static bool checkInt(long long input){
         return true;
     }
     return false;
-
 }
 
 //File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
@@ -275,7 +339,12 @@ static int checkOutput(char * output)
     }
 }
 
-int main(int argc, const char argv[]){
+int main()
+{
+    printf("Please enter your first name: \n");
+    char * fname = readName();
+    printf("Please enter your last name: \n");
+    char * lname = readName();
 
     passedInt1 = getInt();
 
@@ -309,11 +378,19 @@ int main(int argc, const char argv[]){
         outputcheck = (bool) checkOutput(output);
     }
 
+
+    char * p = readpass();
+    unsigned long  newP = generatePass(p, salt(p));
+    char * p2 = readpass();
+    printf("Password has been authenticated");
+    verifyPass(p2, newP, salt(p2));;
+
     FILE* inputFile = openFileRead(input);
 
     FILE* outputFile = openFileWrite(output);
 
-    fputs(name, outputFile);
+    fputs(fname, outputFile);
+    fputs(lname, outputFile);
     fputs(pass, outputFile);
     fputs((const char *) (passedInt1 + passedInt2), outputFile);
     fputs((const char *) (passedInt1 * passedInt2), outputFile);
@@ -325,5 +402,5 @@ int main(int argc, const char argv[]){
 
     fclose(outputFile);
     fclose(inputFile);
-
+    return 0;
 }
