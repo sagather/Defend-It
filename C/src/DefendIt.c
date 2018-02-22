@@ -188,12 +188,16 @@ static long long verifyIntType(const char *buff) {
     return pInt;
 }
 
-static bool intMatch(const char* toMatch){
+static bool intMatch(char* toMatch){
 
+    int len;
+    len = (int) strlen(toMatch);
+    if(toMatch[len-1] == '\n' )
+        toMatch[len-1] = 0;
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^-?([0-9]+)/d{11}", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^-?([0-9]+)", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
