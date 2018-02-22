@@ -10,6 +10,7 @@
 #include <errno.h>
 #define BASE (256)
 #include <fcntl.h>
+#include <crypt.h>
 
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
@@ -118,7 +119,7 @@ unsigned long Hasher(const char *s, unsigned long m)
     return h;
 }
 
-unsigned long generatePass(char * pass, unsigned long s)
+unsigned long generatePass(char * pass/*, unsigned long s*/)
 {
     //char * salted;
     //sprintf(salted,"%lu", s);
@@ -152,9 +153,9 @@ unsigned long salt(char * pass)
 
 
 
-void verifyPass(char * providedPass, unsigned long securePass, unsigned long s)
+void verifyPass(char * providedPass, unsigned long securePass/*, unsigned long s*/)
 {
-    unsigned long newPass = {generatePass(providedPass, s)};
+    unsigned long newPass = {generatePass(providedPass/*, s*/)};
     if(newPass == securePass)
     {
         printf("true");
@@ -336,7 +337,7 @@ int main()
     printf("Please enter your last name: \n");
     char * lname = readName();
 
-   /* passedInt1 = getInt();
+    passedInt1 = getInt();
 
     while(!checkInt(passedInt1)){
         passedInt1 = getInt();
@@ -367,13 +368,13 @@ int main()
         readOutput(output);
         outputcheck = (bool) checkOutput(output);
     }
-*/
+
     char * p = readpass();
-    unsigned long  newP = generatePass(p, salt(p));
+    unsigned long  newP = generatePass(p/*, salt(p)*/);
     char * p2 = readpass();
     printf("Password has been authenticated");
-    verifyPass(p2, newP, salt(p2));
-/*
+    verifyPass(p2, newP/*, salt(p2)*/);
+
     FILE * inputFile = openFileRead(input);
 
     FILE* outputFile = openFileWrite(output);
@@ -386,6 +387,6 @@ int main()
     fclose(outputFile);
 
     fclose(inputFile);
-    fclose(inputFile);*/
+    fclose(inputFile);
     return 0;
 }
