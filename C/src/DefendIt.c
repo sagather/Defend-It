@@ -221,7 +221,7 @@ static long long getInt(){
     printf("Enter an integer between -2147483648 and 2147483647\n");
     fgets((char *) input, 100, stdin);
 
-    while(intMatch((const char *) input) == false){
+    while(intMatch((char *) input) == false){
 
         fgets((char *) input, 100, stdin);
 
