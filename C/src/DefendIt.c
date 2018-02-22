@@ -10,8 +10,6 @@
 #include <errno.h>
 #define BASE (256)
 #include <fcntl.h>
-
-//#include <DefendIt.h>
 #include <crypt.h>
 
 //Command for compile in terminal
@@ -24,21 +22,6 @@ char input[50];
 char output[50];
 
 static long long passedInt1, passedInt2;
-
-char * readName()
-{
-    int len = 0;
-    fgets(n, 50, stdin);
-    len = strlen(n);
-    if(n[len-1] == '\n' )
-        n[len-1] = 0;
-    while(!checkName(n))
-    {
-        readName();
-    }
-    return n;
-
-}
 
 bool checkName(char * name)
 {
@@ -63,20 +46,19 @@ bool checkName(char * name)
 
 }
 
-char * readpass()
+char * readName()
 {
     int len = 0;
-    printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
-    fgets(pass,11,stdin);
-
-    len = strlen(pass);
-    if(pass[len-1] == '\n' )
-        pass[len-1] = 0;
-    while(!checkPass(pass))
+    fgets(n, 50, stdin);
+    len = strlen(n);
+    if(n[len-1] == '\n' )
+        n[len-1] = 0;
+    while(!checkName(n))
     {
-        readpass();
+        readName();
     }
-    return pass;
+    return n;
+
 }
 
 bool checkPass(char * input)
@@ -101,6 +83,41 @@ bool checkPass(char * input)
     }
 
 }
+
+char * readpass()
+{
+    int len = 0;
+    printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
+    fgets(pass,11,stdin);
+
+    len = strlen(pass);
+    if(pass[len-1] == '\n' )
+        pass[len-1] = 0;
+    while(!checkPass(pass))
+    {
+        readpass();
+    }
+    return pass;
+}
+
+unsigned long Hasher(const char *s, unsigned long m)
+{
+    unsigned long h;
+    unsigned const char *us;
+
+    /* cast s to unsigned const char * */
+    /* this ensures that elements of s will be treated as having values >= 0 */
+    us = (unsigned const char *) s;
+
+    h = 0;
+    while(*us != '\0') {
+        h = (h * BASE + *us) % m;
+        us++;
+    }
+
+    return h;
+}
+
 unsigned long generatePass(char * pass, unsigned long s)
 {
 
@@ -126,27 +143,10 @@ unsigned long salt(char * pass)
             printf("something went wrong");
         }
     }
-
     return (unsigned long)result;
 }
 
-unsigned long Hasher(const char *s, unsigned long m)
-{
-    unsigned long h;
-    unsigned const char *us;
 
-    /* cast s to unsigned const char * */
-    /* this ensures that elements of s will be treated as having values >= 0 */
-    us = (unsigned const char *) s;
-
-    h = 0;
-    while(*us != '\0') {
-        h = (h * BASE + *us) % m;
-        us++;
-    }
-
-    return h;
-}
 
 
 void verifyPass(char * providedPass, unsigned long securePass, unsigned long s)
