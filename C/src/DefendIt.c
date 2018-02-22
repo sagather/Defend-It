@@ -28,7 +28,7 @@ bool checkName(char * name)
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^[a-zA-Z]*$", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^[a-zA-Z]+$", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
@@ -121,9 +121,9 @@ unsigned long Hasher(const char *s, unsigned long m)
 unsigned long generatePass(char * pass, unsigned long s)
 {
 
-    char * newPass = {crypt(pass, (char*)s)};
-    unsigned long newP = Hasher(newPass, 10);
-    return newP;
+//    char * newPass = {crypt(pass, (char*)s)};
+//    unsigned long newP = Hasher(newPass, 10);
+//    return newP;
 }
 
 unsigned long salt(char * pass)
@@ -189,7 +189,7 @@ static bool intMatch(const char* toMatch){
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^([-])?[0-9]+", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^-?([0-9]+)/d{11}", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
@@ -225,7 +225,6 @@ static long long getInt(){
 
 static bool checkInt(long long input){
 
-    printf(input + "\n");
     if(input >= -2147483648 && input <= 2147483647){
         return true;
     }
@@ -234,12 +233,12 @@ static bool checkInt(long long input){
 
 //File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
 static FILE* openFileRead(char* fileName){
-    printf("\nin open file input\n");
+
     return fopen(fileName, "r");
 }
 
 static FILE* openFileWrite(char* fileName){
-    printf("\nin open file output\n");
+
     return fopen(fileName, "w");
 }
 
@@ -366,7 +365,6 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-    printf("After outputcheck\n");
     //char * p = readpass();
     //unsigned long  newP = generatePass(p, salt(p));
     //char * p2 = readpass();
@@ -374,22 +372,16 @@ int main()
     //verifyPass(p2, newP, salt(p2));;
 
     FILE * inputFile = openFileRead(input);
-    printf("After inputFile\n");
 
     FILE* outputFile = openFileWrite(output);
-    printf("After outputFile\n");
-    fputs(fname, outputFile);
-    fputs(lname, outputFile);
-    fputs(pass, outputFile);
-    fputs((const char *) (passedInt1 + passedInt2), outputFile);
-    fputs((const char *) (passedInt1 * passedInt2), outputFile);
 
+    fprintf(outputFile, "%s %s\n%lld\n%lld\n", fname, lname, (passedInt1 + passedInt2), (passedInt1 * passedInt2));
     int c;
     while((c = getc(inputFile)) != EOF){
         fputc(c, outputFile);
     }
-
     fclose(outputFile);
+
     fclose(inputFile);
     return 0;
 }
