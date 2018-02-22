@@ -51,9 +51,8 @@ static int testPass(char * pass)
     reti = regcomp(&regex, "^((?=.\\d)(?=.[a-z])(?=.[A-Z])(?=.[!@#$%]).{10})$", 0);
     if(reti)
     {
-        -1;
     }
-    reti = regexec(&regex, pass, 1, 1, 0);
+    reti = regexec(&regex, pass, 1, (regmatch_t *) 1, 0);
     if(!reti)
     {
         return 0;
@@ -67,7 +66,7 @@ static int testPass(char * pass)
 
 static int verify(char * pass)
 {
-  char *result;
+  char *result = NULL;
   int ok;
 
 //  result = crypt(pass, encryption(pass));
@@ -86,7 +85,7 @@ static int encryption(char * pass)
 
   // Generate a (not very) random seed? Rand() was not suggested?
   //Tom has CryptGenRandom on Penguin?
-  seed[0] = time(NULL);
+  seed[0] = (unsigned long) time(NULL);
   seed[1] = getpid() ^ (seed[0] >> 14 & 0x30000);
 
   for (i = 0; i < 10; i++)
@@ -197,7 +196,7 @@ static void readInput(char * input)
     int len;
     printf("\nPlease enter the name of an Input File (Must be .txt, must already exist, the only special characters allowed are underscores and dashes, and must be in the current directory):\n");
     fgets(input, 50, stdin);
-    len = strlen(input);
+    len = (int) strlen(input);
     if(input[len-1] == '\n' )
         input[len-1] = 0;
 }
@@ -239,7 +238,7 @@ static void readOutput(char * output)
     int len;
     printf("Please enter the name of an Output File (Must be .txt, must not already exist, the only special characters allowed are underscores and dashes, and must be directed to the current directory): \n");
     fgets(output, 50, stdin);
-    len = strlen(output);
+    len = (int) strlen(output);
     if(output[len-1] == '\n' )
         output[len-1] = 0;
 }
@@ -301,13 +300,13 @@ int main(int argc, const char argv[]){
     }
 
     readOutput(output);
-    bool outputcheck = checkOutput(output);
+    bool outputcheck = (bool) checkOutput(output);
     while(outputcheck == false)
     {
         printf("\nOutput file name is invalid. Please try again.\n");
         memset(output, 0, sizeof output);
         readOutput(output);
-        outputcheck = checkOutput(output);
+        outputcheck = (bool) checkOutput(output);
     }
 
     FILE* inputFile = openFileRead(input);
