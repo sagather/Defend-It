@@ -224,7 +224,7 @@ static long long getInt(){
     }
 
     return verifyIntType((const char *) input);
-
+//
 }
 
 static bool checkInt(long long input){
