@@ -233,26 +233,14 @@ static bool checkInt(long long input){
 }
 
 //File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
-static FILE* openFileRead(const char* fileName){
-
-    if( access( fileName, F_OK ) != -1 ) {
-        return fopen(fileName, (const char *) 'r');
-    } else {
-        printf("File does not exist.");
-    }
-    return NULL;
-
+static FILE* openFileRead(char* fileName){
+    printf("\nin open file input\n");
+    return fopen(fileName, "r");
 }
 
-static FILE* openFileWrite(const char* fileName){
-
-    if( access( fileName, F_OK ) != -1 ) {
-        printf("Cannot overwrite existing file.");
-    } else {
-        return fopen(fileName, "w");
-    }
-    return NULL;
-
+static FILE* openFileWrite(char* fileName){
+    printf("\nin open file output\n");
+    return fopen(fileName, "w");
 }
 
 static void readInput(char * input)
@@ -378,17 +366,18 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-
+    printf("After outputcheck\n");
     //char * p = readpass();
     //unsigned long  newP = generatePass(p, salt(p));
     //char * p2 = readpass();
     //printf("Password has been authenticated");
     //verifyPass(p2, newP, salt(p2));;
 
-    FILE* inputFile = openFileRead(input);
+    FILE * inputFile = openFileRead(input);
+    printf("After inputFile\n");
 
     FILE* outputFile = openFileWrite(output);
-
+    printf("After outputFile\n");
     fputs(fname, outputFile);
     fputs(lname, outputFile);
     fputs(pass, outputFile);
