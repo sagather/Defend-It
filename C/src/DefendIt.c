@@ -120,18 +120,43 @@ static long long verifyIntType(const char *buff) {
     return pInt;
 }
 
+static bool intMatch(const char* toMatch){
+
+    regex_t regex;
+    int reti;
+    reti = regcomp(&regex, "^[0-9\\-]*$", 0);
+    if(reti)
+    {
+        printf("Should not reach this statement\n");
+    }
+    reti = regexec(&regex, toMatch, 1, (regmatch_t *) 1, 0);
+    if(!reti)
+    {
+        return true;
+    }
+    else
+    {
+        printf("Please input valid data\n");
+        return false;
+
+    }
+
+}
+
 static long long getInt(){
 
     char* input[100];
     printf("Enter an integer between -2147483648 and 2147483647\n");
     fgets((char *) input, 100, stdin);
 
-    while(strcmp(input, '\n') == 0){
-        printf("Please input valid data\n");
+    while(intMatch((const char *) input) == false){
+
         fgets((char *) input, 100, stdin);
+
     }
 
     return verifyIntType((const char *) input);
+
 }
 
 static bool checkInt(long long input){
