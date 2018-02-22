@@ -13,7 +13,7 @@
 #include <crypt.h>
 
 //Command for compile in terminal
-//gcc -pedantic -Wall -Wextra -Werror DefendIt.c
+//gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
 char n[50];
 char pass[11];
@@ -87,7 +87,7 @@ bool checkPass(char * input)
 char * readpass()
 {
     int len = 0;
-    printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
+    printf("Please enter a password of length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets(pass,11,stdin);
 
     len = (int) strlen(pass);
@@ -379,11 +379,11 @@ int main()
     }
 
 
-    char * p = readpass();
-    unsigned long  newP = generatePass(p, salt(p));
-    char * p2 = readpass();
-    printf("Password has been authenticated");
-    verifyPass(p2, newP, salt(p2));;
+    //char * p = readpass();
+    //unsigned long  newP = generatePass(p, salt(p));
+    //char * p2 = readpass();
+    //printf("Password has been authenticated");
+    //verifyPass(p2, newP, salt(p2));;
 
     FILE* inputFile = openFileRead(input);
 
