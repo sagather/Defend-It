@@ -123,22 +123,22 @@ static long long verifyIntType(const char *buff) {
 static bool intMatch(const char* toMatch){
 
     regex_t regex;
-    int reti;
-    reti = regcomp(&regex, "^[0-9\\-]*$", 0);
-    if(reti)
+    regmatch_t pmatch[2];
+    int ret;
+    if(regcomp(&regex, "^([-])?[0-9]+", REG_EXTENDED|REG_NOSUB) != 0)
     {
-        printf("Should not reach this statement\n");
+        printf("\nregcomp() failed, returning nonzero\n");
+        return false;
     }
-    reti = regexec(&regex, toMatch, 1, (regmatch_t *) 1, 0);
-    if(!reti)
+    ret = regexec(&regex, toMatch, 1, pmatch, 0);
+    if(ret == 0) //match found
     {
         return true;
     }
     else
     {
-        printf("Please input valid data\n");
+        printf("Please enter valid data\n");
         return false;
-
     }
 
 }
@@ -162,7 +162,6 @@ static long long getInt(){
 static bool checkInt(long long input){
 
     if(input >= -2147483648 && input <= 2147483647){
-        printf("%lld",input);
         return true;
     }
     return false;
