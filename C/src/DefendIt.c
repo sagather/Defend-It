@@ -50,7 +50,7 @@ char * readName()
 {
     int len = 0;
     fgets(n, 50, stdin);
-    len = strlen(n);
+    len = (int) strlen(n);
     if(n[len-1] == '\n' )
         n[len-1] = 0;
     while(!checkName(n))
@@ -90,7 +90,7 @@ char * readpass()
     printf("Please enter a password of length 10 and includes at least one upper case character, one lower case character, one digit, one punctuation mark: \n");
     fgets(pass,11,stdin);
 
-    len = strlen(pass);
+    len = (int) strlen(pass);
     if(pass[len-1] == '\n' )
         pass[len-1] = 0;
     while(!checkPass(pass))
@@ -165,7 +165,7 @@ void verifyPass(char * providedPass, unsigned long securePass, unsigned long s)
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
 //and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
 static long long verifyIntType(const char *buff) {
-    long long pInt = (long long) 2000000000000000000000000000000000;
+    long long pInt = (long long) 2000000000000;
     char *ptr = NULL;
 
     if (buff) {
