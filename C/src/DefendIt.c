@@ -10,12 +10,12 @@
 #include <errno.h>
 #define BASE (256)
 #include <fcntl.h>
-#include <crypt.h>
+//#include <crypt.h>
 
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
-char n[50];
+
 char pass[11];
 
 char input[50];
@@ -25,6 +25,7 @@ static long long passedInt1, passedInt2;
 
 bool checkName(char * name)
 {
+
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -48,6 +49,7 @@ bool checkName(char * name)
 
 char * readName()
 {
+    char n[50];
     int len = 0;
     fgets(n, 50, stdin);
     len = (int) strlen(n);
@@ -120,15 +122,18 @@ unsigned long Hasher(const char *s, unsigned long m)
 
 unsigned long generatePass(char * pass, unsigned long s)
 {
-
-    char * newPass = {crypt(pass, (char*)s)};
-    unsigned long newP = Hasher(newPass, 10);
+    //char * salted;
+    //sprintf(salted,"%lu", s);
+    //char * newPass = {crypt(pass, salted)};
+    unsigned long newP = Hasher(pass, 10);
     return newP;
 }
 
 unsigned long salt(char * pass)
 {
     ssize_t result = 0;
+    char temp[10];
+    strncpy(temp, pass,10);
     int randomData = open("/dev/urandom", O_RDONLY);
     if (randomData < 0)
     {
@@ -137,7 +142,7 @@ unsigned long salt(char * pass)
     else
     {
 
-        result = read(randomData, pass, sizeof pass);
+        result = read(randomData, temp, 10);
         if (result < 0)
         {
             printf("something went wrong");
@@ -334,7 +339,7 @@ int main()
     printf("Please enter your last name: \n");
     char * lname = readName();
 
-    passedInt1 = getInt();
+   /* passedInt1 = getInt();
 
     while(!checkInt(passedInt1)){
         passedInt1 = getInt();
@@ -365,14 +370,14 @@ int main()
         readOutput(output);
         outputcheck = (bool) checkOutput(output);
     }
-
+*/
     printf("After outputcheck\n");
-    //char * p = readpass();
-    //unsigned long  newP = generatePass(p, salt(p));
-    //char * p2 = readpass();
-    //printf("Password has been authenticated");
-    //verifyPass(p2, newP, salt(p2));;
-
+    char * p = readpass();
+    unsigned long  newP = generatePass(p, salt(p));
+    char * p2 = readpass();
+    printf("Password has been authenticated");
+    verifyPass(p2, newP, salt(p2));
+/*
     FILE * inputFile = openFileRead(input);
     printf("After inputFile\n");
 
@@ -390,6 +395,6 @@ int main()
     }
 
     fclose(outputFile);
-    fclose(inputFile);
+    fclose(inputFile);*/
     return 0;
 }
