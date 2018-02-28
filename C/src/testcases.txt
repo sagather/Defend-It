@@ -48,6 +48,7 @@ JK.EXE
 C:\Windows\Boot\BootDebuggerFiles.config
 output.txt
 output_txt
+output_exe.txt
 
 
 //Password Test cases:
