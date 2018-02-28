@@ -38,6 +38,7 @@ JKLOL.JPG
 C:\Windows\Boot\BootDebuggerFiles.config.
 C:\Windows\Boot\BootDebuggerFiles.config
 input_txt
+input_exe.txt
 
 //output file name cases:
 input.txt
@@ -49,6 +50,7 @@ C:\Windows\Boot\BootDebuggerFiles.config
 output.txt
 output_txt
 output_exe.txt
+"output.txt"
 
 
 //Password Test cases:
@@ -64,3 +66,6 @@ mischief.exe
 Aa1230.exe
     //tab
  //space
+
+//As a final test case, we ran the program in two command line terminals to check if the programs would overwrite
+//each other in the same output file
