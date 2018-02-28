@@ -16,7 +16,6 @@
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
 //TODO:  Make up a more thorough tester
-//TODO:  Check if decimal values get through integer testing
 
 char n[51];
 char pass[11];
