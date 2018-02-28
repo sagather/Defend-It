@@ -16,6 +16,7 @@
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
 //TODO:  Make up a more thorough tester
+//TODO:  Make sure output file type is restricted.  ex: output_txt does not work
 
 char n[51];
 char pass[11];

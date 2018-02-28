@@ -37,6 +37,7 @@ LMAO.BMP
 JKLOL.JPG
 C:\Windows\Boot\BootDebuggerFiles.config.
 C:\Windows\Boot\BootDebuggerFiles.config
+input_txt
 
 //output file name cases:
 input.txt
@@ -46,6 +47,8 @@ LMAO.BMP
 JK.EXE
 C:\Windows\Boot\BootDebuggerFiles.config
 output.txt
+output_txt
+
 
 //Password Test cases:
 //First Password:
