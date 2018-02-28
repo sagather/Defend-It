@@ -10,16 +10,19 @@
 #include <errno.h>
 #define BASE (256)
 #include <fcntl.h>
-#include <crypt.h>
 
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
-char n[50];
+//TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
+//TODO:  Make up a more thorough tester
+//TODO:  Check if decimal values get through integer testing
+
+char n[51];
 char pass[11];
 
-char input[50];
-char output[50];
+char input[51];
+char output[51];
 
 static long long passedInt1, passedInt2;
 
