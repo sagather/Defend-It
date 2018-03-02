@@ -15,12 +15,9 @@
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
-//TODO:  Make up a more thorough tester
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
 //TODO:  Make sure more than one instance of the program cannot access the same output file
-
-
-
+//TODO:  Make sure we don't need to hit enter twice after entering name
 
 char input[51];
 char output[51];
@@ -92,8 +89,9 @@ bool checkPass(char * input)
 
 }
 
-char * readpass(char * pass)
+void readpass()
 {
+    char* pass[11];
     int len = 0;
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets(pass,11,stdin);
@@ -105,7 +103,9 @@ char * readpass(char * pass)
     {
         readpass(pass);
     }
-    return pass;
+
+    FILE* file = openFileWrite("check.pass");
+    fprintf(file, "%s", pass);
 }
 
 unsigned long Hasher(const char *s, unsigned long m)
@@ -136,9 +136,9 @@ unsigned long generatePass(char * pass, long s)
 {
     char temp[30];
     char * you = conLong(temp, s);
-    char * newPass = {crypt(pass, you)};
-    unsigned long newP = Hasher(newPass, 10);
-    return newP;
+//    char * newPass = {crypt(pass, you)};
+  //  unsigned long newP = Hasher(newPass, 10);
+    return 0;
 }
 
 
@@ -406,8 +406,7 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-    char p[11];
-    readpass(p);
+    readpass();
     clearBuf();
     unsigned long  newP = generatePass(p, salt(p));
     clearBuf();

@@ -66,6 +66,3 @@ mischief.exe
 Aa1230.exe
     //tab
  //space
-
-//As a final test case, we ran the program in two command line terminals to check if the programs would overwrite
-//each other in the same output file
