@@ -16,7 +16,6 @@
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
-//TODO:  Make sure more than one instance of the program cannot access the same output file
 //TODO:  Make sure we don't need to hit enter twice after entering name
 
 char input[51];
@@ -108,23 +107,17 @@ void readpass()
     fprintf(file, "%s", pass);
 }
 
-unsigned long Hasher(const char *s, unsigned long m)
+unsigned long Hasher(const char *s )
 {
-    unsigned long h;
-    unsigned const char *us;
+    unsigned long hash = 5381;
+    int c;
 
-    /* cast s to unsigned const char * */
-    /* this ensures that elements of s will be treated as having values >= 0 */
-    us = (unsigned const char *) s;
+    while (c = *s++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
-    h = 0;
-    while(*us != '\0') {
-        h = (h * BASE + *us) % m;
-        us++;
-    }
-
-    return h;
+    return hash;
 }
+
 
 char * conLong(char * temp, long s)
 {
@@ -136,9 +129,9 @@ unsigned long generatePass(char * pass, long s)
 {
     char temp[30];
     char * you = conLong(temp, s);
-//    char * newPass = {crypt(pass, you)};
-  //  unsigned long newP = Hasher(newPass, 10);
-    return 0;
+    char * newPass = {crypt(pass, you)};
+    unsigned long newP = Hasher(newPass);
+    return newP;
 }
 
 
@@ -146,23 +139,22 @@ long salt(char * pass)
 {
     ssize_t result = 0;
     char temp[10];
-    strncpy(temp, pass,10);
-    int randomData = open("/dev/urandom", O_RDONLY);
+    strncpy(temp, pass, 10);
+    int randomData = open("/dev/random", O_RDONLY);
     if (randomData < 0)
     {
         printf("something went wrong");
     }
     else
     {
-
-        result = read(randomData, temp, 10);
+        result = read(randomData, temp, 10) ;
         if (result < 0)
         {
             printf("something went wrong");
         }
     }
 
-    return (long) result;
+    return (long) result ;
 }
 
 
@@ -434,5 +426,4 @@ int main()
     fclose(inputFile);
     fclose(inputFile);
     return 0;
-
 }
