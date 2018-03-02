@@ -11,6 +11,7 @@
 #define BASE (256)
 #include <fcntl.h>
 
+
 //Command for compile in terminal
 //gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
 
@@ -18,8 +19,6 @@
 //TODO:  Make up a more thorough tester
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
 //TODO:  Make sure more than one instance of the program cannot access the same output file
-
-
 
 
 char input[51];
@@ -108,23 +107,17 @@ char * readpass(char * pass)
     return pass;
 }
 
-unsigned long Hasher(const char *s, unsigned long m)
+unsigned long Hasher(const char *s )
 {
-    unsigned long h;
-    unsigned const char *us;
+    unsigned long hash = 5381;
+    int c;
 
-    /* cast s to unsigned const char * */
-    /* this ensures that elements of s will be treated as having values >= 0 */
-    us = (unsigned const char *) s;
+    while (c = *s++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
-    h = 0;
-    while(*us != '\0') {
-        h = (h * BASE + *us) % m;
-        us++;
-    }
-
-    return h;
+    return hash;
 }
+
 
 char * conLong(char * temp, long s)
 {
@@ -137,7 +130,7 @@ unsigned long generatePass(char * pass, long s)
     char temp[30];
     char * you = conLong(temp, s);
     char * newPass = {crypt(pass, you)};
-    unsigned long newP = Hasher(newPass, 10);
+    unsigned long newP = Hasher(newPass);
     return newP;
 }
 
@@ -146,23 +139,22 @@ long salt(char * pass)
 {
     ssize_t result = 0;
     char temp[10];
-    strncpy(temp, pass,10);
-    int randomData = open("/dev/urandom", O_RDONLY);
+    strncpy(temp, pass, 10);
+    int randomData = open("/dev/random", O_RDONLY);
     if (randomData < 0)
     {
         printf("something went wrong");
     }
     else
     {
-
-        result = read(randomData, temp, 10);
+        result = read(randomData, temp, 10) ;
         if (result < 0)
         {
             printf("something went wrong");
         }
     }
 
-    return (long) result;
+    return (long) result ;
 }
 
 
@@ -351,7 +343,7 @@ static int checkOutput(char * output)
 
 int main()
 {
-    printf("Please enter your first name: \n");
+    /*printf("Please enter your first name: \n");
     char fname[51];
     while(!checkName(readName(fname)))
     {
@@ -404,7 +396,7 @@ int main()
         readOutput(output);
         clearBuf();
         outputcheck = (bool) checkOutput(output);
-    }
+    }*/
 
     char p[11];
     readpass(p);
@@ -418,7 +410,7 @@ int main()
     verifyPass(p2, newP, salt(p2));
     clearBuf();
 
-   FILE * inputFile = openFileRead(input);
+   /*FILE * inputFile = openFileRead(input);
     clearBuf();
 
     FILE* outputFile = openFileWrite(output);
@@ -433,7 +425,6 @@ int main()
     fclose(outputFile);
 
     fclose(inputFile);
-    fclose(inputFile);
+    fclose(inputFile);*/
     return 0;
-
 }
