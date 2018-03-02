@@ -19,8 +19,8 @@
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
 //TODO:  Make sure more than one instance of the program cannot access the same output file
 
-char n[51];
-char pass[11];
+
+
 
 char input[51];
 char output[51];
@@ -29,7 +29,8 @@ static long long passedInt1, passedInt2;
 
 void clearBuf()
 {
-    while((getchar())!= '\n');
+    int c = 0;
+    while((c = getchar())!= '\n' && c != EOF);
 }
 
 bool checkName(char * name)
@@ -56,17 +57,14 @@ bool checkName(char * name)
 
 }
 
-char * readName()
+char * readName(char * n)
 {
     int len = 0;
     fgets(n, 50, stdin);
     len = (int) strlen(n);
     if(n[len-1] == '\n' )
         n[len-1] = 0;
-    while(!checkName(n))
-    {
-        readName();
-    }
+
     return n;
 
 }
@@ -94,7 +92,7 @@ bool checkPass(char * input)
 
 }
 
-char * readpass()
+char * readpass(char * pass)
 {
     int len = 0;
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
@@ -105,7 +103,7 @@ char * readpass()
         pass[len-1] = 0;
     while(!checkPass(pass))
     {
-        readpass();
+        readpass(pass);
     }
     return pass;
 }
@@ -354,10 +352,18 @@ static int checkOutput(char * output)
 int main()
 {
     printf("Please enter your first name: \n");
-    char * fname = readName();
+    char fname[51];
+    while(!checkName(readName(fname)))
+    {
+        readName(fname);
+    }
     clearBuf();
     printf("Please enter your last name: \n");
-    char * lname = readName();
+    char lname[51];
+    while(!checkName(readName(lname)))
+    {
+        readName(lname);
+    }
     clearBuf();
 
     passedInt1 = getInt();
@@ -400,11 +406,13 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-    char * p = readpass();
+    char p[11];
+    readpass(p);
     clearBuf();
     unsigned long  newP = generatePass(p, salt(p));
     clearBuf();
-    char * p2 = readpass();
+    char p2[11];
+    readpass(p2);
     clearBuf();
     printf("Password has been authenticated: ");
     verifyPass(p2, newP, salt(p2));
