@@ -343,7 +343,7 @@ static int checkOutput(char * output)
 
 int main()
 {
-    /*printf("Please enter your first name: \n");
+    printf("Please enter your first name: \n");
     char fname[51];
     while(!checkName(readName(fname)))
     {
@@ -396,7 +396,7 @@ int main()
         readOutput(output);
         clearBuf();
         outputcheck = (bool) checkOutput(output);
-    }*/
+    }
 
     char p[11];
     readpass(p);
@@ -410,7 +410,7 @@ int main()
     verifyPass(p2, newP, salt(p2));
     clearBuf();
 
-   /*FILE * inputFile = openFileRead(input);
+   FILE * inputFile = openFileRead(input);
     clearBuf();
 
     FILE* outputFile = openFileWrite(output);
@@ -425,6 +425,6 @@ int main()
     fclose(outputFile);
 
     fclose(inputFile);
-    fclose(inputFile);*/
+    fclose(inputFile);
     return 0;
 }
