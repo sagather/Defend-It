@@ -31,12 +31,8 @@ static long long passedInt1, passedInt2;
 
 void clearBuf()
 {
-    if((feof(stdin)))
-    {
         char c;
         while((c = getchar())!= '\n' && c != EOF);
-    }
-
 }
 
 bool checkName(char * name)
