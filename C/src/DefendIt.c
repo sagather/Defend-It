@@ -128,7 +128,6 @@ unsigned long Hasher(const char *s )
     return hash;
 }
 
-
 char * conLong(char * temp, long s)
 {
     sprintf(temp, "%ld", s);
