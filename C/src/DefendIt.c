@@ -11,8 +11,9 @@
 #define BASE (256)
 #include <fcntl.h>
 
+
 //Command for compile in terminal
-//gcc -pedantic -Wall -Wextra -Werror DefendIt.c -lcrypt
+//gcc -pedantic -Wall -Wextra -Werror DefendIt.c
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
@@ -21,12 +22,21 @@
 char input[51];
 char output[51];
 
+char fname[51];
+char lname[51];
+
+char c;
+
 static long long passedInt1, passedInt2;
 
 void clearBuf()
 {
-    int c = 0;
-    while((c = getchar())!= '\n' && c != EOF);
+    if((feof(stdin)))
+    {
+        char c;
+        while((c = getchar())!= '\n' && c != EOF);
+    }
+
 }
 
 bool checkName(char * name)
@@ -56,11 +66,11 @@ bool checkName(char * name)
 char * readName(char * n)
 {
     int len = 0;
-    fgets(n, 50, stdin);
+    fgets(n, 51, stdin);
+    clearBuf();
     len = (int) strlen(n);
     if(n[len-1] == '\n' )
         n[len-1] = 0;
-
     return n;
 
 }
@@ -228,10 +238,9 @@ static long long getInt(){
     printf("Enter an integer between -2147483648 and 2147483647\n");
     fgets((char *) input, 100, stdin);
 
-    while(intMatch((char *) input) == false){
-
+    while(intMatch((char *) input) == false)
+    {
         fgets((char *) input, 100, stdin);
-
     }
 
     return verifyIntType((const char *) input);
@@ -260,7 +269,7 @@ static FILE* openFileWrite(char* fileName){
 static void readInput(char * input)
 {
     int len;
-    printf("\nPlease enter the name of an Input File (Must be .txt, must already exist, no special characters or spaces allowed, and must be in the current directory):\n");
+    printf("\nPlease enter the name of an Input File (Must be .txt, must already exist, no special characters or spaces allowed, no more than 50 chars long, and must be in the current directory):\n");
     fgets(input, 51, stdin);
     len = (int) strlen(input);
     if(input[len-1] == '\n' )
@@ -302,7 +311,7 @@ static bool checkInput(char * input)
 static void readOutput(char * output)
 {
     int len;
-    printf("Please enter the name of an Output File (Must be .txt, must not already exist, no special characters or spaces allowed, and must be directed to the current directory): \n");
+    printf("Please enter the name of an Output File (Must be .txt, must not already exist, no special characters or spaces allowed, no more than 50 chars long, and must be directed to the current directory): \n");
     fgets(output, 51, stdin);
     len = (int) strlen(output);
     if(output[len-1] == '\n' )
@@ -344,79 +353,68 @@ static int checkOutput(char * output)
 int main()
 {
     printf("Please enter your first name: \n");
-    char fname[51];
-    while(!checkName(readName(fname)))
+
+    readName(fname);
+    bool fnamecheck = checkName(fname);
+    while(fnamecheck == false)
     {
         readName(fname);
+        fnamecheck = checkName(fname);
     }
-    clearBuf();
+
     printf("Please enter your last name: \n");
-    char lname[51];
-    while(!checkName(readName(lname)))
+    readName(lname);
+    bool lnamecheck = checkName(lname);
+    while(lnamecheck == false)
     {
         readName(lname);
+        lnamecheck = checkName(lname);
     }
-    clearBuf();
 
     passedInt1 = getInt();
-    clearBuf();
-
     while(!checkInt(passedInt1)){
         passedInt1 = getInt();
-        clearBuf();
     }
 
     passedInt2 = getInt();
-    clearBuf();
-
     while(!checkInt(passedInt2)){
         passedInt2 = getInt();
-        clearBuf();
     }
 
     readInput(input);
-    clearBuf();
     bool inputcheck = checkInput(input);
     while(inputcheck == false)
     {
         printf("\nInput file name is invalid. Please try again.\n");
         memset(input, 0, sizeof input);
         readInput(input);
-        clearBuf();
         inputcheck = checkInput(input);
     }
 
     readOutput(output);
-    clearBuf();
     bool outputcheck = (bool) checkOutput(output);
     while(outputcheck == false)
     {
         printf("\nOutput file name is invalid. Please try again.\n");
         memset(output, 0, sizeof output);
         readOutput(output);
-        clearBuf();
         outputcheck = (bool) checkOutput(output);
     }
 
     readpass();
     clearBuf();
     unsigned long  newP = generatePass(p, salt(p));
-    clearBuf();
     char p2[11];
     readpass(p2);
-    clearBuf();
+
     printf("Password has been authenticated: ");
     verifyPass(p2, newP, salt(p2));
-    clearBuf();
 
-   FILE * inputFile = openFileRead(input);
-    clearBuf();
-
+    FILE * inputFile = openFileRead(input);
     FILE* outputFile = openFileWrite(output);
-    clearBuf();
 
     fprintf(outputFile, "%s %s\n%lld\n%lld\n", fname, lname, (passedInt1 + passedInt2), (passedInt1 * passedInt2));
-    clearBuf();
+
     int c;
     while((c = getc(inputFile)) != EOF){
         fputc(c, outputFile);
