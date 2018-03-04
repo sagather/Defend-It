@@ -17,7 +17,6 @@
 
 //TODO:  Make sure we flush the buffer just in case we have inputs longer than our char arrays
 //TODO:  Make sure output file type is restricted.  ex: output_txt does not work
-//TODO:  Make sure we don't need to hit enter twice after entering name
 
 char input[51];
 char output[51];
@@ -93,6 +92,11 @@ bool checkPass(char * input)
 
 }
 
+static FILE* openFileWrite(char* fileName){
+
+    return fopen(fileName, "w");
+}
+
 void readpass()
 {
     char* pass[11];
@@ -108,7 +112,8 @@ void readpass()
         readpass(pass);
     }
 
-    FILE* file = openFileWrite("check.pass");
+    char* checkpass = "check.pass";
+    FILE* file = openFileWrite((char *) checkPass);
     fprintf(file, "%s", pass);
 }
 
@@ -255,11 +260,6 @@ static FILE* openFileRead(char* fileName){
     return fopen(fileName, "r");
 }
 
-static FILE* openFileWrite(char* fileName){
-
-    return fopen(fileName, "w");
-}
-
 static void readInput(char * input)
 {
     int len;
@@ -397,9 +397,8 @@ int main()
 
     readpass();
     clearBuf();
-    unsigned long  newP = generatePass(p, salt(p));
-    char p2[11];
-    readpass(p2);
+    //unsigned long  newP = generatePass(p, salt(p));
+    readpass();
 
     printf("Password has been authenticated: ");
     verifyPass(p2, newP, salt(p2));
