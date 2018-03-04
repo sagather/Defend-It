@@ -34,20 +34,36 @@ void clearBuf()
         while((c = (char) getchar()) != '\n' && c != EOF);
 }
 
-FILE* passwordFile(){
+//File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
+static FILE* openFileRead(char* fileName)
+{
+
+    return fopen(fileName, "r");
+}
+
+FILE * passwordFile()
+{
 
     FILE* file = openFileRead("BlankFile.txt");
-    char* pass;
 
-    if(passct == 1){
+    if(passct == 1)
+    {
         file = openFileRead("check.pass");
     }
-    else if(passct == 2){
+    else if(passct == 2)
+    {
         file = openFileRead("check2.pass");
     }
 
     return file;
 
+}
+
+char * getPass(FILE* file)
+{
+    char pass[11];
+    fgets(pass, 11, file);
+    return pass;
 }
 
 bool checkName(char * name)
@@ -85,27 +101,11 @@ char * readName(char * n)
 
 }
 
-//File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
-static FILE* openFileRead(char* fileName){
 
-    return fopen(fileName, "r");
-}
 
 bool checkPass()
 {
-    FILE* file = openFileRead("input.txt");
-
-    if(passct == 1){
-        file = openFileRead("check.pass");
-    }
-    else if(passct == 2){
-        file = openFileRead("check2.pass");
-    }
-
-    fgets(input, 11, file);
-
-    fclose(file);
-
+    //passwordFile();
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -127,12 +127,14 @@ bool checkPass()
 
 }
 
-static FILE* openFileWrite(char* fileName){
+static FILE* openFileWrite(char* fileName)
+{
 
     return fopen(fileName, "w");
 }
 
-void readpass() {
+void readpass()
+{
     char *pass[11];
     int len = 0;
     passct++;
@@ -143,12 +145,14 @@ void readpass() {
     fgets((char *) pass, 11, stdin);
 
     len = (int) strlen((const char *) pass);
-    if (pass[len - 1] == (char *) '\n') {
+    if (pass[len - 1] == (char *) '\n')
+    {
         pass[len - 1] = 0;
         fprintf(file, "%p", pass);
         fclose(file);
     }
-    while (!checkPass()) {
+    while (!checkPass())
+    {
         readpass();
         passct--;
     }
@@ -158,9 +162,9 @@ void readpass() {
 unsigned long Hasher(const char *s )
 {
     unsigned long hash = 5381;
-    int c;
+    int c = 0;
 
-    while (c == *s++)
+    while (c <= *s++)
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
@@ -172,18 +176,17 @@ char * conLong(char * temp, long s)
     return temp;
 }
 
-unsigned long generatePass(long s)
+unsigned long generatePass(char * pass, long s)
 {
     FILE* file = passwordFile();
-    char* pass;
 
     fgets(pass, 11, file);
 
     char temp[30];
     char * you = conLong(temp, s);
-    //char * newPass = {crypt(pass, you)};
-    //unsigned long newP = Hasher(newPass);
-    //return newP;
+    char * newPass = {crypt(pass, you)};
+    unsigned long newP = Hasher(newPass);
+    return newP;
 }
 
 
@@ -220,17 +223,20 @@ void verifyPass(unsigned long securePass, long s)
     unsigned long newPass = {generatePass(s)};
     if(newPass == securePass)
     {
-        printf("true");
+        printf("Password has been authenticated: ");
+        printf("true\n");
     }
     else
     {
-        printf("false");
+        printf("Password has been authenticated: ");
+        printf("false\n");
     }
 }
 
 //Source code modified from https://wiki.sei.cmu.edu/confluence/display/c/ERR34-C.+Detect+errors+when+converting+a+string+to+a+number
 //and from https://www.techonthenet.com/c_language/standard_library_functions/stdlib_h/strtoll.php
-static long long verifyIntType(const char *buff) {
+static long long verifyIntType(const char *buff)
+{
     long long pInt = (long long) 2000000000000;
     char *ptr = NULL;
 
@@ -239,18 +245,22 @@ static long long verifyIntType(const char *buff) {
         if (pInt == 0)
         {
             /* If a conversion error occurred, display a message and exit */
-            if (errno == EINVAL) {
+            if (errno == EINVAL)
+            {
                 printf("Invalid integer type, were there some weird characters or something?\n");
             }
         }
-    } else {
+    }
+    else
+    {
         printf("Not a valid integer type... did you have any letters or special symbols in there?");
     }
 
     return pInt;
 }
 
-static bool intMatch(char* toMatch){
+static bool intMatch(char* toMatch)
+{
 
     int len;
     len = (int) strlen(toMatch);
@@ -277,7 +287,8 @@ static bool intMatch(char* toMatch){
 
 }
 
-static long long getInt(){
+static long long getInt()
+{
 
     char* input[100];
     printf("Enter an integer between -2147483648 and 2147483647\n");
@@ -292,9 +303,11 @@ static long long getInt(){
 //
 }
 
-static bool checkInt(long long input){
+static bool checkInt(long long input)
+{
 
-    if(input >= -2147483648 && input <= 2147483647){
+    if(input >= -2147483648 && input <= 2147483647)
+    {
         return true;
     }
     return false;
@@ -406,12 +419,14 @@ int main()
     }
 
     passedInt1 = getInt();
-    while(!checkInt(passedInt1)){
+    while(!checkInt(passedInt1))
+    {
         passedInt1 = getInt();
     }
 
     passedInt2 = getInt();
-    while(!checkInt(passedInt2)){
+    while(!checkInt(passedInt2))
+    {
         passedInt2 = getInt();
     }
 
@@ -435,13 +450,8 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-    readpass();
-    clearBuf();
-    //unsigned long  newP = generatePass(p, salt(p));
-    readpass();
 
-    printf("Password has been authenticated: ");
-    //verifyPass(p2, newP, salt(p2));
+    verifyPass(getPass(passwordFile(), generatePass(getPass(passwordFile()), salt(getPass(passwordFile()))), salt(getPass(passwordFile());
 
     FILE * inputFile = openFileRead(input);
     FILE* outputFile = openFileWrite(output);
@@ -449,7 +459,8 @@ int main()
     fprintf(outputFile, "%s %s\n%lld\n%lld\n", fname, lname, (passedInt1 + passedInt2), (passedInt1 * passedInt2));
 
     int c;
-    while((c = getc(inputFile)) != EOF){
+    while((c = getc(inputFile)) != EOF)
+    {
         fputc(c, outputFile);
     }
     fclose(outputFile);
