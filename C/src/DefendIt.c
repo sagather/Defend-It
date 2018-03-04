@@ -31,7 +31,7 @@ static long long passedInt1, passedInt2;
 void clearBuf()
 {
         char c;
-        while((c = getchar())!= '\n' && c != EOF);
+        while((c = (char) getchar()) != '\n' && c != EOF);
 }
 
 bool checkName(char * name, int len)
@@ -108,19 +108,21 @@ void readpass()
     char* pass[11];
     int len = 0;
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
-    fgets(pass,11,stdin);
+    fgets((char *) pass, 11, stdin);
 
     len = sizeof(pass);
     if(pass[len-1] == '\n' )
+    len = (int) strlen((const char *) pass);
+    if(pass[len-1] == (char *) '\n')
         pass[len-1] = 0;
-    while(!checkPass(pass))
+    while(!checkPass((char *) pass))
     {
-        readpass(pass);
+        readpass();
     }
 
-    char* checkpass = "check.pass";
-    FILE* file = openFileWrite((char *) checkPass);
-    fprintf(file, "%s", pass);
+    FILE* file = openFileWrite("check.txt");
+    fprintf(file, "%p", pass);
+    fclose(file);
 }
 
 unsigned long Hasher(const char *s )
@@ -128,7 +130,7 @@ unsigned long Hasher(const char *s )
     unsigned long hash = 5381;
     int c;
 
-    while (c = *s++)
+    while (c == *s++)
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
