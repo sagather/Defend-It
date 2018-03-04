@@ -102,7 +102,6 @@ bool checkPass()
         file = openFileRead("check2.pass");
     }
 
-    //TODO: Please check if this is accurate
     fgets(input, 11, file);
 
     fclose(file);
@@ -216,9 +215,9 @@ void verifyPass(unsigned long securePass, long s)
     FILE* file = passwordFile();
 
     char* providedPass;
+    fgets(providedPass, 11, file);
 
-
-    unsigned long newPass = {generatePass(providedPass, s)};
+    unsigned long newPass = {generatePass(s)};
     if(newPass == securePass)
     {
         printf("true");
