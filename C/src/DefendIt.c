@@ -37,7 +37,8 @@ void clearBuf()
 
 bool checkName(char * name)
 {
-
+    if(strlen(name) > 50)
+        return false;
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -53,7 +54,7 @@ bool checkName(char * name)
     }
     else
     {
-        printf("\nName does not meet requirements\n");
+
         return false;
     }
 
