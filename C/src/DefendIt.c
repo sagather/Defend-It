@@ -24,6 +24,8 @@ char output[51];
 char fname[51];
 char lname[51];
 
+int passct = 0;
+
 static long long passedInt1, passedInt2;
 
 void clearBuf()
@@ -67,8 +69,22 @@ char * readName(char * n)
 
 }
 
-bool checkPass(char * input)
+bool checkPass(c8)
 {
+    FILE* file = openFileRead("input.txt");
+
+    if(passct == 1){
+        file = openFileRead("check.pass");
+    }
+    else if(passct == 2){
+        file = openFileRead("check2.pass");
+    }
+
+    //TODO: Please check if this is accurate
+    fgets(input, 11, file);
+
+    fclose(file);
+
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -95,22 +111,27 @@ static FILE* openFileWrite(char* fileName){
     return fopen(fileName, "w");
 }
 
-void readpass()
-{
-    char* pass[11];
+void readpass() {
+    char *pass[11];
     int len = 0;
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets((char *) pass, 11, stdin);
 
     len = (int) strlen((const char *) pass);
-    if(pass[len-1] == (char *) '\n')
-        pass[len-1] = 0;
-    while(!checkPass((char *) pass))
-    {
+    if (pass[len - 1] == (char *) '\n')
+        pass[len - 1] = 0;
+    while (!checkPass((char *) pass)) {
         readpass();
     }
 
-    FILE* file = openFileWrite("check.txt");
+    FILE *file = openFileWrite("BlankFile.txt");
+
+    if (passct == 1) {
+        file = openFileWrite("check.pass");
+    }
+    else if(passct == 2){
+        file = openFileWrite("check2.pass");
+    }
     fprintf(file, "%p", pass);
     fclose(file);
 }
