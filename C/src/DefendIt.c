@@ -37,12 +37,10 @@ void clearBuf()
 
 bool checkName(char * name)
 {
-    if(strlen(name) > 50)
-        return false;
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^[a-zA-Z]*$", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^([a-zA-Z]+){50}$", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
