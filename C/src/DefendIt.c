@@ -34,6 +34,22 @@ void clearBuf()
         while((c = (char) getchar()) != '\n' && c != EOF);
 }
 
+FILE* passwordFile(){
+
+    FILE* file = openFileRead("BlankFile.txt");
+    char* pass;
+
+    if(passct == 1){
+        file = openFileRead("check.pass");
+    }
+    else if(passct == 2){
+        file = openFileRead("check2.pass");
+    }
+
+    return file;
+
+}
+
 bool checkName(char * name)
 {
     regex_t regex;
@@ -122,14 +138,7 @@ void readpass() {
     int len = 0;
     passct++;
 
-    FILE *file = openFileWrite("BlankFile.txt");
-
-    if (passct == 1) {
-        file = openFileWrite("check.pass");
-    }
-    else if(passct == 2){
-        file = openFileWrite("check2.pass");
-    }
+    FILE *file = passwordFile();
 
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets((char *) pass, 11, stdin);
@@ -166,15 +175,8 @@ char * conLong(char * temp, long s)
 
 unsigned long generatePass(long s)
 {
-    FILE* file = openFileRead("BlankFile.txt");
+    FILE* file = passwordFile();
     char* pass;
-
-    if(passct == 1){
-        file = openFileRead("check.pass");
-    }
-    else if(passct == 2){
-        file = openFileRead("check2.pass");
-    }
 
     fgets(pass, 11, file);
 
@@ -208,8 +210,14 @@ long salt(char * pass)
     return (long) result ;
 }
 
-void verifyPass(char * providedPass, unsigned long securePass, long s)
+void verifyPass(unsigned long securePass, long s)
 {
+
+    FILE* file = passwordFile();
+
+    char* providedPass;
+
+
     unsigned long newPass = {generatePass(providedPass, s)};
     if(newPass == securePass)
     {
