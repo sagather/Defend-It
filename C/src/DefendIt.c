@@ -21,8 +21,8 @@
 char input[51];
 char output[51];
 
-char fname[51];
-char lname[51];
+char fname[100];
+char lname[100];
 
 char c;
 
@@ -34,12 +34,17 @@ void clearBuf()
         while((c = getchar())!= '\n' && c != EOF);
 }
 
-bool checkName(char * name)
+bool checkName(char * name, int len)
 {
+    if(len > 50)
+    {
+        printf("Name is too long, must be 50 characters or less in length");
+        return false;
+    }
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^([a-zA-Z]+){50}$", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^([a-zA-Z]+){1,50}$", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
@@ -57,20 +62,21 @@ bool checkName(char * name)
 
 }
 
-char * readName(char * n)
+int readName(char * n)
 {
     int len = 0;
-    fgets(n, 51, stdin);
-    clearBuf();
+    fgets(n, 100, stdin);
+    //clearBuf();
     len = (int) strlen(n);
     if(n[len-1] == '\n' )
         n[len-1] = 0;
-    return n;
+    return len;
 
 }
 
 bool checkPass(char * input)
 {
+
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -104,7 +110,7 @@ void readpass()
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets(pass,11,stdin);
 
-    len = (int) strlen(pass);
+    len = sizeof(pass);
     if(pass[len-1] == '\n' )
         pass[len-1] = 0;
     while(!checkPass(pass))
@@ -348,21 +354,21 @@ int main()
 {
     printf("Please enter your first name: \n");
 
-    readName(fname);
-    bool fnamecheck = checkName(fname);
+    int length = readName(fname);
+    bool fnamecheck = checkName(fname, length);
     while(fnamecheck == false)
     {
-        readName(fname);
-        fnamecheck = checkName(fname);
+        length = readName(fname);
+        fnamecheck = checkName(fname, length);
     }
 
     printf("Please enter your last name: \n");
-    readName(lname);
-    bool lnamecheck = checkName(lname);
+    int len = readName(lname);
+    bool lnamecheck = checkName(lname, len);
     while(lnamecheck == false)
     {
-        readName(lname);
-        lnamecheck = checkName(lname);
+        len = readName(lname);
+        lnamecheck = checkName(lname, len);
     }
 
     passedInt1 = getInt();
@@ -395,13 +401,13 @@ int main()
         outputcheck = (bool) checkOutput(output);
     }
 
-    readpass();
-    clearBuf();
+    //readpass();
+    //clearBuf();
     //unsigned long  newP = generatePass(p, salt(p));
-    readpass();
+    //readpass();
 
     printf("Password has been authenticated: ");
-    verifyPass(p2, newP, salt(p2));
+    //verifyPass(p2, newP, salt(p2));
 
     FILE * inputFile = openFileRead(input);
     FILE* outputFile = openFileWrite(output);
