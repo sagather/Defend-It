@@ -69,6 +69,12 @@ char * readName(char * n)
 
 }
 
+//File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
+static FILE* openFileRead(char* fileName){
+
+    return fopen(fileName, "r");
+}
+
 bool checkPass()
 {
     FILE* file = openFileRead("input.txt");
@@ -114,15 +120,7 @@ static FILE* openFileWrite(char* fileName){
 void readpass() {
     char *pass[11];
     int len = 0;
-    printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
-    fgets((char *) pass, 11, stdin);
-
-    len = (int) strlen((const char *) pass);
-    if (pass[len - 1] == (char *) '\n')
-        pass[len - 1] = 0;
-    while (!checkPass((char *) pass)) {
-        readpass();
-    }
+    passct++;
 
     FILE *file = openFileWrite("BlankFile.txt");
 
@@ -132,8 +130,21 @@ void readpass() {
     else if(passct == 2){
         file = openFileWrite("check2.pass");
     }
-    fprintf(file, "%p", pass);
-    fclose(file);
+
+    printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
+    fgets((char *) pass, 11, stdin);
+
+    len = (int) strlen((const char *) pass);
+    if (pass[len - 1] == (char *) '\n') {
+        pass[len - 1] = 0;
+        fprintf(file, "%p", pass);
+        fclose(file);
+    }
+    while (!checkPass()) {
+        readpass();
+        passct--;
+    }
+
 }
 
 unsigned long Hasher(const char *s )
@@ -271,12 +282,6 @@ static bool checkInt(long long input){
         return true;
     }
     return false;
-}
-
-//File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
-static FILE* openFileRead(char* fileName){
-
-    return fopen(fileName, "r");
 }
 
 static void readInput(char * input)
