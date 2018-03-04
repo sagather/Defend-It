@@ -164,8 +164,20 @@ char * conLong(char * temp, long s)
     return temp;
 }
 
-unsigned long generatePass(char * pass, long s)
+unsigned long generatePass(long s)
 {
+    FILE* file = openFileRead("BlankFile.txt");
+    char* pass;
+
+    if(passct == 1){
+        file = openFileRead("check.pass");
+    }
+    else if(passct == 2){
+        file = openFileRead("check2.pass");
+    }
+
+    fgets(pass, 11, file);
+
     char temp[30];
     char * you = conLong(temp, s);
     //char * newPass = {crypt(pass, you)};
@@ -195,9 +207,6 @@ long salt(char * pass)
 
     return (long) result ;
 }
-
-
-
 
 void verifyPass(char * providedPass, unsigned long securePass, long s)
 {
