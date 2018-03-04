@@ -38,7 +38,8 @@ bool checkName(char * name, int len)
 {
     if(len > 50)
     {
-        printf("Name is too long, must be 50 characters or less in length");
+        printf("Name is too long, must be 50 characters or less in length\n");
+        clearBuf();
         return false;
     }
     regex_t regex;
@@ -360,6 +361,7 @@ int main()
     bool fnamecheck = checkName(fname, length);
     while(fnamecheck == false)
     {
+        printf("Please enter your first name: \n");
         length = readName(fname);
         fnamecheck = checkName(fname, length);
     }
@@ -369,17 +371,20 @@ int main()
     bool lnamecheck = checkName(lname, len);
     while(lnamecheck == false)
     {
+        printf("Please enter your last name: \n");
         len = readName(lname);
         lnamecheck = checkName(lname, len);
     }
 
     passedInt1 = getInt();
     while(!checkInt(passedInt1)){
+        printf("Unaccepted integer, please try again. \n");
         passedInt1 = getInt();
     }
 
     passedInt2 = getInt();
     while(!checkInt(passedInt2)){
+        printf("Unaccepted integer, please try again. \n");
         passedInt2 = getInt();
     }
 
