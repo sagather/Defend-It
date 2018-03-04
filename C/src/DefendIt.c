@@ -69,7 +69,7 @@ char * readName(char * n)
 
 }
 
-bool checkPass(c8)
+bool checkPass()
 {
     FILE* file = openFileRead("input.txt");
 
