@@ -34,6 +34,11 @@ void clearBuf()
         while((c = (char) getchar()) != '\n' && c != EOF);
 }
 
+static FILE* openFileWrite(char* fileName){
+
+    return fopen(fileName, "w");
+}
+
 //File verification code modified from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c-cross-platform
 static FILE* openFileRead(char* fileName)
 {
@@ -44,7 +49,7 @@ static FILE* openFileRead(char* fileName)
 FILE * passwordFile(char * name)
 {
 
-    FILE* file = fopen(name, "w+");
+    FILE* file = fopen(name, "a+");
 
     return file;
 
@@ -53,7 +58,7 @@ FILE * passwordFile(char * name)
 char * getPass(FILE* file)
 {
 
-    fgets(&pass, 11, file);
+    fgets(pass, 10, file);
     return pass;
 }
 
@@ -98,10 +103,8 @@ int readName(char * n)
 }
 
 
-
-bool checkPass(char * file)
+bool checkPass(char * input)
 {
-    char*  input = getPass(passwordFile(file));
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -123,46 +126,33 @@ bool checkPass(char * file)
 
 }
 
-static FILE* openFileWrite(char* fileName)
+char * readpass(char * pass)
 {
-
-    return fopen(fileName, "w");
-}
-
-void readpass(char* fileName)
-{
-    char pass[11];
     int len = 0;
-
-    FILE *file = passwordFile(fileName);
-
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
-    fgets((char *) pass, (int) "%s", stdin);
+    fgets(pass,11,stdin);
 
-    len = (int) strlen((const char *) pass);
-    if (pass[len - 1] == '\n')
+    len = (int) strlen(pass);
+    if(pass[len-1] == '\n' )
+        pass[len-1] = 0;
+    while(!checkPass(pass))
     {
-        pass[len - 1] = 0;
-        fprintf(file, "%s", pass);
-        fclose(file);
+        readpass(pass);
     }
-    while (!checkPass(fileName))
-    {
-        readpass(fileName);
-    }
-
+    return pass;
 }
 
 unsigned long Hasher(const char *s )
 {
     unsigned long hash = 5381;
-    int c = 0;
+    int c;
 
-    while (c <= *s++)
+    while (c = *s++)
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
 }
+
 
 char * conLong(char * temp, long s)
 {
@@ -172,10 +162,6 @@ char * conLong(char * temp, long s)
 
 unsigned long generatePass(char * pass, long s)
 {
-    //FILE* file = passwordFile(fileName);
-
-    //fgets(pass, "%s", file);
-
     char temp[30];
     char * you = conLong(temp, s);
     char * newPass = {crypt(pass, you)};
@@ -189,7 +175,7 @@ long salt(char * pass)
     ssize_t result = 0;
     char temp[10];
     strncpy(temp, pass, 10);
-    int randomData = open("/dev/random", O_RDONLY);
+    int randomData = open("/dev/urandom", O_RDONLY);
     if (randomData < 0)
     {
         printf("something went wrong");
@@ -206,18 +192,19 @@ long salt(char * pass)
     return (long) result ;
 }
 
-void verifyPass(unsigned long newPass, unsigned long securePass)
-{
 
+
+
+void verifyPass(char * providedPass, unsigned long securePass, long s)
+{
+    unsigned long newPass = {generatePass(providedPass, s)};
     if(newPass == securePass)
     {
-        printf("Password has been authenticated: ");
-        printf("true\n");
+        printf("true");
     }
     else
     {
-        printf("Password has been authenticated: ");
-        printf("false\n");
+        printf("false");
     }
 }
 
@@ -441,10 +428,17 @@ int main()
     }
 
 
-        readpass("check.pass");
+    char p[11];
+    readpass(p);
 
-        readpass("check2.pass");
-    verifyPass((generatePass(getPass(passwordFile("check.pass")), (salt(getPass(passwordFile("check.pass")))))), (generatePass(getPass(passwordFile("check2.pass")), (salt(getPass(passwordFile("check2.pass")))))));
+    unsigned long  newP = generatePass(p, salt(p));
+    clearBuf();
+    char p2[11];
+    readpass(p2);
+
+    printf("Password has been authenticated: ");
+    verifyPass(p2, newP, salt(p2));
+
 
 
     FILE * inputFile = openFileRead(input);
