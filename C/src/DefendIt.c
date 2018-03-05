@@ -25,6 +25,7 @@ char fname[51];
 char lname[51];
 
 int passct = 0;
+char pass[11];
 
 static long long passedInt1, passedInt2;
 
@@ -41,7 +42,7 @@ static FILE* openFileRead(char* fileName)
     return fopen(fileName, "r");
 }
 
-FILE * passwordFile()
+FILE * passwordFile(char * name)
 {
 
     FILE* file = openFileRead("BlankFile.txt");
@@ -61,7 +62,7 @@ FILE * passwordFile()
 
 char * getPass(FILE* file)
 {
-    char pass[11];
+
     fgets(pass, 11, file);
     return pass;
 }
@@ -135,20 +136,20 @@ static FILE* openFileWrite(char* fileName)
 
 void readpass()
 {
-    char *pass[11];
+    char pass[11];
     int len = 0;
     passct++;
 
     FILE *file = passwordFile();
 
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
-    fgets((char *) pass, 11, stdin);
+    fgets((char *) pass, (int) "%s", stdin);
 
     len = (int) strlen((const char *) pass);
-    if (pass[len - 1] == (char *) '\n')
+    if (pass[len - 1] == '\n')
     {
         pass[len - 1] = 0;
-        fprintf(file, "%p", pass);
+        fprintf(file, "%s", pass);
         fclose(file);
     }
     while (!checkPass())
@@ -212,15 +213,9 @@ long salt(char * pass)
     return (long) result ;
 }
 
-void verifyPass(unsigned long securePass, long s)
+void verifyPass(unsigned long newPass, unsigned long securePass)
 {
 
-    FILE* file = passwordFile();
-
-    char* providedPass;
-    fgets(providedPass, 11, file);
-
-    unsigned long newPass = {generatePass(s)};
     if(newPass == securePass)
     {
         printf("Password has been authenticated: ");
@@ -451,7 +446,8 @@ int main()
     }
 
 
-    verifyPass(getPass(passwordFile(), generatePass(getPass(passwordFile()), salt(getPass(passwordFile()))), salt(getPass(passwordFile());
+    verifyPass(generatePass(getPass(passwordFile(check.pass)), salt(getPass(passwordFile(check.pass)))), generatePass(getPass(passwordFile(check2.pass)), salt(getPass(passwordFile(check2.pass)))));
+
 
     FILE * inputFile = openFileRead(input);
     FILE* outputFile = openFileWrite(output);
