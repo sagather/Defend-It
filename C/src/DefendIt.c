@@ -99,9 +99,9 @@ int readName(char * n)
 
 
 
-bool checkPass()
+bool checkPass(char * file)
 {
-    //passwordFile();
+    char*  input = getPass(passwordFile(file));
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
@@ -146,7 +146,7 @@ void readpass(char* fileName)
         fprintf(file, "%s", pass);
         fclose(file);
     }
-    while (!checkPass())
+    while (!checkPass(fileName))
     {
         readpass(fileName);
     }
@@ -441,6 +441,9 @@ int main()
     }
 
 
+        readpass("check.pass");
+
+        readpass("check2.pass");
     verifyPass((generatePass(getPass(passwordFile("check.pass")), (salt(getPass(passwordFile("check.pass")))))), (generatePass(getPass(passwordFile("check2.pass")), (salt(getPass(passwordFile("check2.pass")))))));
 
 
