@@ -165,11 +165,11 @@ char * conLong(char * temp, long s)
     return temp;
 }
 
-unsigned long generatePass(char * pass, long s, char * fileName)
+unsigned long generatePass(char * pass, long s)
 {
-    FILE* file = passwordFile(fileName);
+    //FILE* file = passwordFile(fileName);
 
-    fgets(pass, "%s", file);
+    //fgets(pass, "%s", file);
 
     char temp[30];
     char * you = conLong(temp, s);
@@ -434,7 +434,7 @@ int main()
     }
 
 
-    verifyPass(generatePass(getPass(passwordFile("check.pass")), salt(getPass(passwordFile("check.pass"))), "check.pass"), generatePass(getPass(passwordFile("check2.pass")), salt(getPass(passwordFile("check2.pass"))), "check2.pass"));
+    verifyPass((generatePass(getPass(passwordFile("check.pass")), (salt(getPass(passwordFile("check.pass")))))), (generatePass(getPass(passwordFile("check2.pass")), (salt(getPass(passwordFile("check2.pass")))))));
 
 
     FILE * inputFile = openFileRead(input);
