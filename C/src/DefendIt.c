@@ -45,16 +45,7 @@ static FILE* openFileRead(char* fileName)
 FILE * passwordFile(char * name)
 {
 
-    FILE* file = openFileRead("BlankFile.txt");
-
-    if(passct == 1)
-    {
-        file = openFileRead("check.pass");
-    }
-    else if(passct == 2)
-    {
-        file = openFileRead("check2.pass");
-    }
+    FILE* file = openFileRead(name);
 
     return file;
 
@@ -134,13 +125,13 @@ static FILE* openFileWrite(char* fileName)
     return fopen(fileName, "w");
 }
 
-void readpass()
+void readpass(char* fileName)
 {
     char pass[11];
     int len = 0;
     passct++;
 
-    FILE *file = passwordFile();
+    FILE *file = passwordFile(fileName);
 
     printf("Please enter a password of only length 10 that includes only upper case and lower case characters, and digits: \n");
     fgets((char *) pass, (int) "%s", stdin);
@@ -154,7 +145,7 @@ void readpass()
     }
     while (!checkPass())
     {
-        readpass();
+        readpass(fileName);
         passct--;
     }
 
@@ -177,11 +168,11 @@ char * conLong(char * temp, long s)
     return temp;
 }
 
-unsigned long generatePass(char * pass, long s)
+unsigned long generatePass(char * pass, long s, char * fileName)
 {
-    FILE* file = passwordFile();
+    FILE* file = passwordFile(fileName);
 
-    fgets(pass, 11, file);
+    fgets(pass, "%s", file);
 
     char temp[30];
     char * you = conLong(temp, s);
@@ -446,7 +437,7 @@ int main()
     }
 
 
-    verifyPass(generatePass(getPass(passwordFile(check.pass)), salt(getPass(passwordFile(check.pass)))), generatePass(getPass(passwordFile(check2.pass)), salt(getPass(passwordFile(check2.pass)))));
+    verifyPass(generatePass(getPass(passwordFile("check.pass")), salt(getPass(passwordFile("check.pass"))), "check.pass"), generatePass(getPass(passwordFile("check2.pass")), salt(getPass(passwordFile("check2.pass"))), "check2.pass"));
 
 
     FILE * inputFile = openFileRead(input);
@@ -454,7 +445,7 @@ int main()
 
     fprintf(outputFile, "%s %s\n%lld\n%lld\n", fname, lname, (passedInt1 + passedInt2), (passedInt1 * passedInt2));
 
-    int c;
+    int c = 0;
     while((c = getc(inputFile)) != EOF)
     {
         fputc(c, outputFile);
