@@ -21,8 +21,8 @@
 char input[51];
 char output[51];
 
-char fname[51];
-char lname[51];
+char fname[100];
+char lname[100];
 
 char pass[11];
 
@@ -53,16 +53,22 @@ FILE * passwordFile(char * name)
 char * getPass(FILE* file)
 {
 
-    fgets(pass, 11, file);
+    fgets(&pass, 11, file);
     return pass;
 }
 
-bool checkName(char * name)
+bool checkName(char * name, int len)
 {
+    if(len > 50)
+    {
+        printf("Name is too long, must be 50 characters or less in length\n");
+        clearBuf();
+        return false;
+    }
     regex_t regex;
     regmatch_t pmatch[2];
     int ret;
-    if(regcomp(&regex, "^([a-zA-Z]+){50}$", REG_EXTENDED|REG_NOSUB) != 0)
+    if(regcomp(&regex, "^([a-zA-Z]+)$", REG_EXTENDED|REG_NOSUB) != 0)
     {
         printf("\nregcomp() failed, returning nonzero\n");
         return false;
@@ -80,15 +86,14 @@ bool checkName(char * name)
 
 }
 
-char * readName(char * n)
+int readName(char * n)
 {
     int len = 0;
-    fgets(n, 51, stdin);
-    clearBuf();
+    fgets(n, 100, stdin);
     len = (int) strlen(n);
     if(n[len-1] == '\n' )
         n[len-1] = 0;
-    return n;
+    return len;
 
 }
 
@@ -384,21 +389,23 @@ int main()
 {
     printf("Please enter your first name: \n");
 
-    readName(fname);
-    bool fnamecheck = checkName(fname);
+    int length = readName(fname);
+    bool fnamecheck = checkName(fname, length);
     while(fnamecheck == false)
     {
-        readName(fname);
-        fnamecheck = checkName(fname);
+        printf("Please enter your first name: \n");
+        length = readName(fname);
+        fnamecheck = checkName(fname, length);
     }
 
     printf("Please enter your last name: \n");
-    readName(lname);
-    bool lnamecheck = checkName(lname);
+    int len = readName(lname);
+    bool lnamecheck = checkName(lname, len);
     while(lnamecheck == false)
     {
-        readName(lname);
-        lnamecheck = checkName(lname);
+        printf("Please enter your last name: \n");
+        len = readName(lname);
+        lnamecheck = checkName(lname, len);
     }
 
     passedInt1 = getInt();
