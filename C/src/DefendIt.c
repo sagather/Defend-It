@@ -24,7 +24,6 @@ char output[51];
 char fname[51];
 char lname[51];
 
-int passct = 0;
 char pass[11];
 
 static long long passedInt1, passedInt2;
@@ -129,7 +128,6 @@ void readpass(char* fileName)
 {
     char pass[11];
     int len = 0;
-    passct++;
 
     FILE *file = passwordFile(fileName);
 
@@ -146,7 +144,6 @@ void readpass(char* fileName)
     while (!checkPass())
     {
         readpass(fileName);
-        passct--;
     }
 
 }
