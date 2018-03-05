@@ -44,7 +44,7 @@ static FILE* openFileRead(char* fileName)
 FILE * passwordFile(char * name)
 {
 
-    FILE* file = openFileRead(name);
+    FILE* file = fopen(name, "r+");
 
     return file;
 
